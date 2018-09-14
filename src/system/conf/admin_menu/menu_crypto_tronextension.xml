@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!-- {load_language_text section="admin_menu" use_fallback=$smarty.const.SHOW_UNTRANSLATED_MENUITEMS} -->
+<!-- {load_language_text section="module_center_module" name="module_center_module" use_fallback=$smarty.const.SHOW_UNTRANSLATED_MENUITEMS} -->
+<!-- TRON Blockchain Connector - Extension -->
+<admin_menu>
+    <!-- TRON Blockchain extension - Menue Erweiterung -->
+    <menugroup id="BOX_HEADING_ORDERS">
+        <menuitem sort="40" link="tron_wallet_transactions.php" title="Wallet Transaktionseingang" />
+    </menugroup>
+    <!-- TRON Blockchain extension - Anpassung Menüpunkt -->
+    <menugroup id="BOX_HEADING_TRON_BLOCKCHAIN" sort="30" background="kunden.png" class="fa fa-retweet" title="TRON Blockchain">
+      <menuitem sort="10" link="tron_wallet_configuration.php" title="Grundeinstellungen" />
+      <menuitem sort="20" link="tron_wallet_configuration1.php"  title="Unvollständige Transaktionen" />
+  	</menugroup>
+
+  <!-- EOM -->
+</admin_menu>
