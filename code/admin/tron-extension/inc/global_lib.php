@@ -32,6 +32,7 @@ function apiclient($url,$conn) {
     // set connection option
     curl_setopt_array($conn, array(
         CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_TIMEOUT => 20,
         CURLOPT_URL => $url,
     ));
     // return the response
