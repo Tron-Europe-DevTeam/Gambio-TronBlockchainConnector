@@ -47,14 +47,15 @@ $topic = array(
 				"0" => array (
 						"name"  => "Zeitpunkt Blockchain Sync", 	
 						"value" => getdbparameter('synctime'),
-						"type"  => "edit",
+						"type"  => "edit_disabled",
 						"id"    => "synctime"
 				),
+				
 				"1" => array (
-						"name"  => "Automatischer Blockchain Abgleich", 	
-						"value" => getdbparameter('ordersync'),
-						"type"  => "switch",
-						"id"    => "ordersync"
+						"name"  => "Transaktionen synchronisiert", 	
+						"value" => getdbparameter('syncdatacount'),
+						"type"  => "edit_disabled",
+						"id"    => "syncdatacount"
 				)
 			)
 		),
@@ -63,9 +64,9 @@ $topic = array(
 			"data" => array (
 				"0" => array (
 						"name"  => "Automatischer Bestellabgleich", 	
-						"value" => getdbparameter('synctime'),
+						"value" => getdbparameter('ordersync'),
 						"type"  => "switch",
-						"id"    => "synctime"
+						"id"    => "ordersync"
 				),
 				"1" => array (
 						"name"  => "Automatische Wallet/Kundenzuweisung", 	
