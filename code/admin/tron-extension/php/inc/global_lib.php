@@ -121,33 +121,28 @@ function system_gen_setuptable($topic) {
 			if ($data['type'] == 'edit') {
 				$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
 				$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
-				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
+				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" name="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
 			}	
 			
 			// input field disabled
 			else if ($data['type'] == 'edit_disabled') {
 				$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
 				$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
-				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" disabled></td></tr>';
-			}		
+				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" value="'.$data['value'].'" required="" disabled></td></tr>';
+			}
 			
 			// switch field
-			else if ($data['type'] == 'switch') {										
-				$tabledata .= ' <tr>';
-				$tabledata .= ' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name']);
-				$tabledata .= '  </td>';
-				$tabledata .= '    <td class="dataTableContent_gm">';
-				$tabledata .= ' 	<div class="gx-container">';
-				if ($data['value'] == '0'){
-					$tabledata .= '<div class="switcher" title=""><input class="pull-left" id="'.$data['id'].'" name="'.$data['id'].'" value="'.$data['value'].'" type="checkbox"><div class="switcher-toggler"></div><div class="switcher-inner"><div class="switcher-state-on"><span class="fa fa-check"></span></div><div class="switcher-state-off"><span class="fa fa-times"></span></div></div><div class="switcher-text-on"></div><div class="switcher-text-off"></div></div>';
-				}
-				else {
-					$tabledata .= '<div class="switcher checked" title=""><input class="pull-left" id="'.$data['id'].'" name="'.$data['id'].'" value="'.$data['value'].'" checked="checked" type="checkbox"><div class="switcher-toggler"></div><div class="switcher-inner"><div class="switcher-state-on"><span class="fa fa-check"></span></div><div class="switcher-state-off"><span class="fa fa-times"></span></div></div><div class="switcher-text-on"></div><div class="switcher-text-off"></div></div>';
-				}
-				$tabledata .= ' 	</div>';
-				$tabledata .= '    </td>';
-				$tabledata .= ' </tr>';
-			}	
+			else if ($data['type'] == 'switch') {
+			$tabledata.='<tr>';
+			$tabledata.=' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name']);
+			$tabledata.=' </td>';
+			$tabledata.=' <td class="dataTableContent_gm">';
+			$tabledata.='	<div class="gx-container" data-gx-widget="checkbox">';
+			$tabledata.='		<input class="pull-left" type="checkbox" name="'.$data['id'].'" value="1"'.($data['value'] == '1' ? ' checked="checked"' : '').'/>';
+			$tabledata.='	</div>';
+			$tabledata.=' </td>';
+			$tabledata.='</tr>';
+			}			
 		}
 	$tabledata .= '</tr>';
 	}
@@ -313,22 +308,23 @@ $dbquery = "SELECT * FROM transactions ORDER BY block DESC";
 $result = mysqli_query($dbconn[0], $dbquery);
 if (mysqli_num_rows($result) > 0) {
     while($value = mysqli_fetch_assoc($result)) {
-
-		  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-		  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
-		  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
-		  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
-		  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
-		  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
-		  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
-		  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
-		  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
-		  echo '<td class="dataTableContent">'.str_replace('%20',' ',(hex2bin($value['data']))).'</td>';
-		  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
-		  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
-		  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-		  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
-		  echo '</tr>'; 	  	
+			if ((getdbparameter('tblonlytransnote')<>'1') & ($value['data']=='')){
+			  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
+			  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
+			  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
+			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
+			  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
+			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
+			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
+			  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
+			  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
+			  echo '<td class="dataTableContent">'.str_replace('%20',' ',(hex2bin($value['data']))).'</td>';
+			  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
+			  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
+			  echo '<td class="dataTableContent">'.$orderprice.'</td>';
+			  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
+			  echo '</tr>';
+			}
 		}
 	}	
   echo '</tbody></table></br>';

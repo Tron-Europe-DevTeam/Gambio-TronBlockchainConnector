@@ -12,6 +12,5 @@
       <menuitem sort="10" link="tron_wallet_configuration.php" title="Grundeinstellungen" />
       <menuitem sort="20" link="tron_wallet_configuration1.php"  title="Unvollständige Transaktionen" />
   	</menugroup>
-
   <!-- EOM -->
 </admin_menu>

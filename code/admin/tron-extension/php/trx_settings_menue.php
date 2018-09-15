@@ -38,6 +38,12 @@ $topic = array(
 						"value" => getdbparameter('autosync'),
 						"type"  => "switch",
 						"id"    => "autosync"
+				),
+				"2" => array (
+						"name"  => "TBL_ONLY_TRANS_WITH_NOTES", 	
+						"value" => getdbparameter('tblonlytransnote'),
+						"type"  => "switch",
+						"id"    => "tblonlytransnote"
 				)
 			)
 		),

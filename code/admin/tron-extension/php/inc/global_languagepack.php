@@ -36,6 +36,10 @@ $translationvar = array(
 			"german" => "Blockchain Abgleich (automatisch)",
 			"english" => "Automatic Blockchain Sync"
 			),	
+	"TBL_ONLY_TRANS_WITH_NOTES" => array (
+			"german" => "Nur Transaktionen mit Verwendungszweck anzeigen",
+			"english" => "Display transactions with notes only"
+			),		
 	"SYNC_INFOS" => array (
 			"german" => "Informationen zur Synchronisation",
 			"english" => "Sync Information"
@@ -63,7 +67,11 @@ $translationvar = array(
 	"BLOCKCHAIN_DEFAULTSETTINGS" => array (
 			"german" => "TRON Grundeinstellungen",
 			"english" => "TRON Defaultsettings"
-			)				
+			),
+	"GLOBAL_SAVE" => array (
+			"german" => "Speichern",
+			"english" => "Save"
+			),
 );
 
 function fieldvalue($value){
