@@ -25,6 +25,7 @@
 // include external library
 include 'inc/global_lib.php';
 include 'inc/global_settings.php';
+include 'trx_transaction.var.php';
 
 // autosync check
 if (isset($_GET['autosync'])){
@@ -52,7 +53,7 @@ else {
 	blockchainsync($dbconn,$curlconn,$shop_wallet_address);
 	}
 	// generate transaction table
-	blockchain_gen_transtbl($dbconn);
+	blockchain_gen_transtbl($dbconn,$column);
 
 	// generate blockchain sync button
 	echo system_gen_syncbutton('/admin/tron_wallet_transactions.php?autosync=1','Blockchain Sync','Last Sync : '.getdbparameter('syncdatacount'));

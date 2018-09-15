@@ -37,15 +37,20 @@ if (dbconncheck()){
 else {	
 	// check useroption and set parameter
     if ((isset($_GET['action']) == 'Save')|(isset($_GET['action']) == 'Speichern')) {
+		// auto blockchain sync
 		if (isset($_GET['autosync'])) setdbparameter('autosync', '1'); else setdbparameter('autosync', '0'); 
+		// wallet <-> user association -> to learn the tron wallet address
 		if (isset($_GET['walletuserassociation'])) setdbparameter('walletuserassociation', '1'); else setdbparameter('walletuserassociation', '0'); 
+		// ordersync -> change orderstate
 		if (isset($_GET['ordersync'])) setdbparameter('ordersync', '1'); else setdbparameter('ordersync', '0'); 
+		// display transactions with purpose only
 		if (isset($_GET['tblonlytransnote'])) setdbparameter('tblonlytransnote', $_GET['tblonlytransnote']); else setdbparameter('tblonlytransnote', '0'); 
+		// tron wallet shop address
 		if (isset($_GET['shopaddress'])) setdbparameter('shopaddress', $_GET['shopaddress']); else setdbparameter('shopaddress', ''); 
 	}
 
 	// menue informations
-    include 'trx_settings_menue.php';
+    include 'trx_settings.vars.php';
 	// generate table
 	echo '<td class="boxCenter" width="100%" valign="top">
 				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('BLOCKCHAIN_DEFAULTSETTINGS').'</div>

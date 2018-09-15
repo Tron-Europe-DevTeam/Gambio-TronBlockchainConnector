@@ -72,6 +72,50 @@ $translationvar = array(
 			"german" => "Speichern",
 			"english" => "Save"
 			),
+	"TBL_TITLE_BLOCK" => array (
+			"german" => "Block",
+			"english" => "Block"
+			),
+	"TBL_TITLE_TIMESTAMP" => array (
+			"german" => "Zeitpunkt",
+			"english" => "Timestamp"
+			),
+	"TBL_TITLE_TRANSACTION_HASH" => array (
+			"german" => "Transaktions Hash",
+			"english" => "Transaction Hash"
+			),
+	"TBL_TITLE_SENDER" => array (
+			"german" => "Absender",
+			"english" => "Sender"
+			),
+	"TBL_TITLE_QUANTITY" => array (
+			"german" => "Anzahl",
+			"english" => "Quantity"
+			),
+	"TBL_TITLE_CURRENCY" => array (
+			"german" => "Währung",
+			"english" => "Currency"
+			),
+	"TBL_TITLE_PURPOSE_OF_USE" => array (
+			"german" => "Verwendungszweck",
+			"english" => "Purpose of use"
+			),
+	"TBL_TITLE_ORDERASSIGNMENT" => array (
+			"german" => "Automatisch Zugewiesen",
+			"english" => "Automatically Assigned"
+			),
+	"TBL_TITLE_ORDERNUMBER" => array (
+			"german" => "Bestellnummer",
+			"english" => "Ordernumber"
+			),
+	"TBL_TITLE_TOTAL_AMOUNT" => array (
+			"german" => "Rechnungsbetrag",
+			"english" => "Total amount"
+			),
+	"TBL_TITLE_STATUS" => array (
+			"german" => "Status",
+			"english" => "State"
+			)
 );
 
 function fieldvalue($value){

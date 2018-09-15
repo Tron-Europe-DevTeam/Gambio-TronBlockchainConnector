@@ -176,7 +176,7 @@ do {
 			// check last hashvalue
 			$result = dbquery($dbconn[0], "SELECT transactionHash FROM transactions WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
 			
-			if ((mysqli_num_rows($result) == 0) && ($value['transferToAddress'] == $shop_wallet_address)){
+			if (mysqli_num_rows($result) == 0){
 				// extract currency name
 				$trans_currency = $value['tokenName'];	
 				
@@ -286,47 +286,40 @@ do {
 
 
 // function blockchainsync
-function blockchain_gen_transtbl($dbconn){
-	
-echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
-			  <tbody>
-				  <tr class="dataTableHeadingRow gx-container">
-				  <td class="dataTableHeadingContent" style="width: 36px">Block</td>
-				  <td class="dataTableHeadingContent" style="width: 130px">Zeitpunkt</td>
-				  <td class="dataTableHeadingContent" style="width: 120px">Transaktion Hash</td>
-				  <td class="dataTableHeadingContent" style="width: 120px">Absender</td>
-				  <td class="dataTableHeadingContent" style="width: 30px">Anzahl</td>
-				  <td class="dataTableHeadingContent" style="width: 60px">Währung</td>
-				  <td class="dataTableHeadingContent" style="width: 120px">Verwendungszweck</td>
-				  <td class="dataTableHeadingContent" style="width: 40px">Bestellung zugewiesen</td>
-				  <td class="dataTableHeadingContent" style="width: 40px">Bestellnummer</td>
-				  <td class="dataTableHeadingContent" style="width: 80px">Rechnungsbetrag</td>
-				  <td class="dataTableHeadingContent" style="width: 40px">Status</td>
-			</tr>';
+function blockchain_gen_transtbl($dbconn,$column){
+	echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
+			<tbody>
+				<tr class="dataTableHeadingRow gx-container">';				  
+	foreach ($column as $columndata) {
+			echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title']).'</td>';
+	};
+	echo'</tr>';
+	$dbquery = "SELECT * FROM transactions WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
+	$result = mysqli_query($dbconn[0], $dbquery);
+	if (mysqli_num_rows($result) > 0) {
+		while($value = mysqli_fetch_assoc($result)) {
+				if ((getdbparameter('tblonlytransnote')=='1') && ($value['data']=='')){} 
+				else {
 
-$dbquery = "SELECT * FROM transactions ORDER BY block DESC";
-$result = mysqli_query($dbconn[0], $dbquery);
-if (mysqli_num_rows($result) > 0) {
-    while($value = mysqli_fetch_assoc($result)) {
-			if ((getdbparameter('tblonlytransnote')<>'1') & ($value['data']=='')){
-			  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-			  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
-			  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
-			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
-			  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
-			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
-			  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
-			  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
-			  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
-			  echo '<td class="dataTableContent">'.str_replace('%20',' ',(hex2bin($value['data']))).'</td>';
-			  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
-			  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
-			  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-			  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
-			  echo '</tr>';
+				  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
+				  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
+				  
+				  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
+				  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
+				  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
+				  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
+				  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
+				  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
+				  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
+				  echo '<td class="dataTableContent">'.str_replace('%20',' ',(hex2bin($value['data']))).'</td>';
+				  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
+				  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
+				  echo '<td class="dataTableContent">'.$orderprice.'</td>';
+				  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
+				  echo '</tr>';
+				}
 			}
-		}
-	}	
+		}	
   echo '</tbody></table></br>';
 }
 
