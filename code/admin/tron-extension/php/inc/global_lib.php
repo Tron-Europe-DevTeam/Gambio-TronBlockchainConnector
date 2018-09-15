@@ -24,7 +24,7 @@
    
 // include external library
 include 'global_settings.php';
-include 'global_language.php';
+include 'global_languagepack.php';
 
 // set default timezone
 date_default_timezone_set('europe/berlin');

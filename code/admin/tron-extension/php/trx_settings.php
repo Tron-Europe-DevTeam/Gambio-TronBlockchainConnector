@@ -39,7 +39,7 @@ else {
     include 'trx_settings_menue.php';
 	// generate table
 	echo '<td class="boxCenter" width="100%" valign="top">
-				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">TRON Blockchain Grundeinstellungen</div>
+				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('BLOCKCHAIN_DEFAULTSETTINGS').'</div>
 							<div class="main" >
 								<table width="50%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container"><td>
 											<table class="gx-configuration">

@@ -59,7 +59,11 @@ $translationvar = array(
 	"ORDER_ASSIGNMENT" => array (
 			"german" => "Automatische Bestellzuweisung",
 			"english" => "Automatic order assignment"
-			)						
+			),		
+	"BLOCKCHAIN_DEFAULTSETTINGS" => array (
+			"german" => "TRON Grundeinstellungen",
+			"english" => "TRON Defaultsettings"
+			)				
 );
 
 function fieldvalue($value){
