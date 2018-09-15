@@ -108,27 +108,18 @@ function hyperlink_gambio_ordersummary($orderid) {
 }
 
 // function to generate tabledata
-function system_gen_setuptable($top,$para,$val,$name) {
+function system_gen_setuptable($topic) {
 	// reset values
-	$topic = '';
-	$i = 0;
-	
-	// generate header
-	foreach ($top as $topname) {
-    if ($topic <> $topname){
-		$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.$topname.'</th></tr>';
-		$topic = $topname;
-	}
-	
-	// generate tablerows
-	$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-	$tabledata .= '<label for="'.$name[$i].'">'.$para[$i].'</label></td>';
-	$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$name[$i].'" value="'.$val[$i].'" required="" ></td>';
-	
-    if ($top[$i+1] <> $topname){
-		$tabledata .= '</tr>';
+	$tabledata = '';
+	// create value
+	foreach ($topic as $value) {
+		$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.$value['title'].'</th></tr>';
+        foreach ($value['data'] as $data) {
+			$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
+			$tabledata .= '<label for="'.$data['id'].'">'.$data['name'].'</label></td>';
+			$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" ></td>';		
 		}
-	$i++;
+	$tabledata .= '</tr>';
 	}
 	return $tabledata;
 }
@@ -309,7 +300,7 @@ if (mysqli_num_rows($result) > 0) {
 		  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
 		  echo '</tr>'; 	  	
 		}
-	}
+	}	
   echo '</tbody></table></br>';
 }
 
