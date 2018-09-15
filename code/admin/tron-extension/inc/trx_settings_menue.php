@@ -36,7 +36,7 @@ $topic = array(
 				"1" => array (
 						"name"  => "Automatischer Blockchain Abgleich", 	
 						"value" => getdbparameter('autosync'),
-						"type"  => "edit",
+						"type"  => "switch",
 						"id"    => "autosync"
 				)
 			)
