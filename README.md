@@ -65,6 +65,7 @@ INSERT INTO globalsetup (parameter,value) VALUES ('synctime','')
 INSERT INTO globalsetup (parameter,value) VALUES ('ordersync','')
 INSERT INTO globalsetup (parameter,value) VALUES ('walletuserassociation','')
 INSERT INTO globalsetup (parameter,value) VALUES ('syncdatacount','')
+INSERT INTO globalsetup (parameter,value) VALUES ('tblonlytransnote','');
 ```
 5. create a user user and assign rights
 ```
