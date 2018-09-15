@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: global_settings.php 
+   Filename: trx_settings.php 
    
    15.09.2018 - Init Version
    
@@ -21,15 +21,31 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+   
+// include external library
+include 'inc/global_lib.php';
+include 'inc/global_settings.php';
 
-// sql parameter
-$server = "127.0.0.1";
-$username = "";
-$password = "";
-$dbname[0] = "";
-$dbname[1] = "";
+// create db connection - backend
+$dbconn[0] = dbconnect($dbname[0]);
 
-// Tron API URL definition
-$url[0] = 'https://api.tronscan.org/api/transfer?address=';
-$url[1] = 'https://api.tronscan.org/api/transaction/';
+// check dbconnection
+if(dbconncheck()){
+	mysqli_close($dbconn[0]);
+}
+
+else {	
+	// menue informations
+    include 'trx_settings_menue.php';
+	// generate table
+	echo '<td class="boxCenter" width="100%" valign="top">
+				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">TRON Blockchain Grundeinstellungen</div>
+							<div class="main" >
+								<table width="50%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container"><td>
+											<table class="gx-configuration">
+												<tbody>'.system_gen_setuptable($topic).'</tbody>
+											</table>
+									</td></tr></tbody></table>
+				</div></td>';
+};
 ?>

@@ -31,6 +31,7 @@ require('includes/application_top.php');
 			<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
 			<title><?php echo TITLE; ?></title>
 			<link rel="stylesheet" type="text/css" href="html/assets/styles/legacy/stylesheet.css">
+			<script type="text/javascript" src="html/assets/javascript/legacy/gm/general.js"></script>
 		</head>
 		<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 			<!-- header //-->
@@ -48,7 +49,7 @@ require('includes/application_top.php');
 						</table>
 					</td>					
 					<!-- body_text //-->
-						<?php require('tron-extension/inc/trx_settings.php'); ?>
+						<?php require('tron-extension/php/trx_settings.php'); ?>
 					<!-- body_text_eof //-->
 				</tr>
 			</table>

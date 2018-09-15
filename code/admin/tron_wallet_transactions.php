@@ -56,7 +56,7 @@ require('includes/application_top.php');
 					</td>
 			  </tr>
 			</table>
-			<?php require('tron-extension/inc/trx_transations.php'); ?>
+			<?php require('tron-extension/php/trx_transations.php'); ?>
 			</td>
 			<!-- body_text_eof //-->
 		  </tr>

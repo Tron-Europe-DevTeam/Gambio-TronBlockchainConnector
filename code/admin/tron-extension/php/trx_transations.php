@@ -23,8 +23,8 @@
    --------------------------------------------------------------*/
 
 // include external library
-include 'global_lib.php';
-include 'global_settings.php';
+include 'inc/global_lib.php';
+include 'inc/global_settings.php';
 
 // autosync check
 if (isset($_GET['autosync'])){

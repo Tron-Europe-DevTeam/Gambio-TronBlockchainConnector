@@ -24,6 +24,8 @@
    
 // include external library
 include 'global_settings.php';
+include 'global_language.php';
+
 // set default timezone
 date_default_timezone_set('europe/berlin');
 
@@ -113,26 +115,26 @@ function system_gen_setuptable($topic) {
 	$tabledata = '';
 	// create value
 	foreach ($topic as $value) {
-		$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.$value['title'].'</th></tr>';
+		$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title']).'</th></tr>';
         foreach ($value['data'] as $data) {
-			// input field
+			// input field									 
 			if ($data['type'] == 'edit') {
 				$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-				$tabledata .= '<label for="'.$data['id'].'">'.$data['name'].'</label></td>';
+				$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
 				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
 			}	
 			
 			// input field disabled
 			else if ($data['type'] == 'edit_disabled') {
 				$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-				$tabledata .= '<label for="'.$data['id'].'">'.$data['name'].'</label></td>';
+				$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
 				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" disabled></td></tr>';
 			}		
 			
 			// switch field
 			else if ($data['type'] == 'switch') {										
 				$tabledata .= ' <tr>';
-				$tabledata .= ' <td class="dataTableContent_gm configuration-label">'.$data['name'];
+				$tabledata .= ' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name']);
 				$tabledata .= '  </td>';
 				$tabledata .= '    <td class="dataTableContent_gm">';
 				$tabledata .= ' 	<div class="gx-container">';

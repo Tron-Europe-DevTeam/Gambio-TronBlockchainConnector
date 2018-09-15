@@ -25,16 +25,16 @@
 // Settingsmenue
 $topic = array( 
 	"0" => array (
-			"title" => "Wallet Einstellungen",
+			"title" => "WALLET_SETTINGS",
 			"data" => array (
 				"0" => array (
-						"name"  => "TRON Wallet Shop Adresse", 	
+						"name"  => "TRON_WALLET_ADDRESS", 	
 						"value" => getdbparameter('shopaddress'),
 						"type"  => "edit",
 						"id"    => "shopaddress"
 				),
 				"1" => array (
-						"name"  => "Automatischer Blockchain Abgleich", 	
+						"name"  => "BLOCKCHAIN_SYNC", 	
 						"value" => getdbparameter('autosync'),
 						"type"  => "switch",
 						"id"    => "autosync"
@@ -42,17 +42,17 @@ $topic = array(
 			)
 		),
 	"1" => array (
-			"title" => "Synchronisationsinformationen", 
+			"title" => "SYNC_INFOS", 
 			"data" => array (
 				"0" => array (
-						"name"  => "Zeitpunkt Blockchain Sync", 	
+						"name"  => "SYNC_TIMESTAMP", 	
 						"value" => getdbparameter('synctime'),
 						"type"  => "edit_disabled",
 						"id"    => "synctime"
 				),
 				
 				"1" => array (
-						"name"  => "Transaktionen synchronisiert", 	
+						"name"  => "SYNC_TRANSACTIONS", 	
 						"value" => getdbparameter('syncdatacount'),
 						"type"  => "edit_disabled",
 						"id"    => "syncdatacount"
@@ -60,16 +60,16 @@ $topic = array(
 			)
 		),
 	"2" => array (
-			"title" => "Backend Einstellungen", 
+			"title" => "BACKEND_SETTINGS", 
 			"data" => array (
 				"0" => array (
-						"name"  => "Automatischer Bestellabgleich", 	
+						"name"  => "ORDER_ASSIGNMENT", 	
 						"value" => getdbparameter('ordersync'),
 						"type"  => "switch",
 						"id"    => "ordersync"
 				),
 				"1" => array (
-						"name"  => "Automatische Wallet/Kundenzuweisung", 	
+						"name"  => "WALLET_ASSOCIATION", 	
 						"value" => getdbparameter('walletuserassociation'),
 						"type"  => "switch",
 						"id"    => "walletuserassociation"

@@ -23,8 +23,8 @@
    --------------------------------------------------------------*/
 
 // include external library
-include '/var/www/html/admin/tron-extension/inc/global_lib.php';
-include '/var/www/html/admin/tron-extension/inc/global_settings.php';
+include '/var/www/html/admin/tron-extension/php/inc/global_lib.php';
+include '/var/www/html/admin/tron-extension/php/inc/global_settings.php';
 // set default timezone
 date_default_timezone_set('europe/berlin');
 
