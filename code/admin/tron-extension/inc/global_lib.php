@@ -115,11 +115,29 @@ function system_gen_setuptable($topic) {
 	foreach ($topic as $value) {
 		$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.$value['title'].'</th></tr>';
         foreach ($value['data'] as $data) {
+			// edit field
 			if ($data['type'] == 'edit') {
 				$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
 				$tabledata .= '<label for="'.$data['id'].'">'.$data['name'].'</label></td>';
 				$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" id="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
 			}		
+			// switch field
+			else if ($data['type'] == 'switch') {										
+				$tabledata .= ' <tr>';
+				$tabledata .= ' <td class="dataTableContent_gm configuration-label">'.$data['name'];
+				$tabledata .= '  </td>';
+				$tabledata .= '    <td class="dataTableContent_gm">';
+				$tabledata .= ' 	<div class="gx-container">';
+				if ($data['value'] == '0'){
+					$tabledata .= '<div class="switcher" title=""><input class="pull-left" id="'.$data['id'].'" name="'.$data['id'].'" value="'.$data['value'].'" type="checkbox"><div class="switcher-toggler"></div><div class="switcher-inner"><div class="switcher-state-on"><span class="fa fa-check"></span></div><div class="switcher-state-off"><span class="fa fa-times"></span></div></div><div class="switcher-text-on"></div><div class="switcher-text-off"></div></div>';
+				}
+				else {
+					$tabledata .= '<div class="switcher checked" title=""><input class="pull-left" id="'.$data['id'].'" name="'.$data['id'].'" value="'.$data['value'].'" checked="checked" type="checkbox"><div class="switcher-toggler"></div><div class="switcher-inner"><div class="switcher-state-on"><span class="fa fa-check"></span></div><div class="switcher-state-off"><span class="fa fa-times"></span></div></div><div class="switcher-text-on"></div><div class="switcher-text-off"></div></div>';
+				}
+				$tabledata .= ' 	</div>';
+				$tabledata .= '    </td>';
+				$tabledata .= ' </tr>';
+			}	
 		}
 	$tabledata .= '</tr>';
 	}

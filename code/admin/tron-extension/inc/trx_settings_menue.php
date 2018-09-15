@@ -53,7 +53,7 @@ $topic = array(
 				"1" => array (
 						"name"  => "Automatischer Blockchain Abgleich", 	
 						"value" => getdbparameter('ordersync'),
-						"type"  => "edit",
+						"type"  => "switch",
 						"id"    => "ordersync"
 				)
 			)
@@ -64,13 +64,13 @@ $topic = array(
 				"0" => array (
 						"name"  => "Automatischer Bestellabgleich", 	
 						"value" => getdbparameter('synctime'),
-						"type"  => "edit",
+						"type"  => "switch",
 						"id"    => "synctime"
 				),
 				"1" => array (
 						"name"  => "Automatische Wallet/Kundenzuweisung", 	
 						"value" => getdbparameter('walletuserassociation'),
-						"type"  => "edit",
+						"type"  => "switch",
 						"id"    => "walletuserassociation"
 				)
 			)
