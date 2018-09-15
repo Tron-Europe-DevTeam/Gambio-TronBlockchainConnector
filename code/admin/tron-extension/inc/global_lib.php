@@ -1,4 +1,27 @@
 <?php
+/* --------------------------------------------------------------
+   Tron Europe Dev Team
+   Filename: global_lib.php 
+   
+   15.09.2018 - Init Version
+   
+   Released under the GNU General Public License (Version 2)
+   [http://www.gnu.org/licenses/gpl-2.0.html]
+
+   IMPORTANT! THIS FILE IS DEPRECATED AND WILL BE REPLACED IN THE FUTURE. 
+   MODIFY IT ONLY FOR FIXES. DO NOT APPEND IT WITH NEW FEATURES, USE THE
+   NEW GX-ENGINE LIBRARIES INSTEAD.
+   --------------------------------------------------------------
+
+   based on:
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(orders_status.php,v 1.19 2003/02/06); www.oscommerce.com
+   (c) 2003	 nextcommerce (orders_status.php,v 1.9 2003/08/18); www.nextcommerce.org
+   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: orders_status.php 1125 2005-07-28 09:59:44Z novalis $)
+
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+   
 // include external library
 include 'global_settings.php';
 // set default timezone
@@ -253,12 +276,12 @@ echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" bord
 				  <td class="dataTableHeadingContent" style="width: 130px">Zeitpunkt</td>
 				  <td class="dataTableHeadingContent" style="width: 120px">Transaktion Hash</td>
 				  <td class="dataTableHeadingContent" style="width: 120px">Absender</td>
-				  <td class="dataTableHeadingContent" style="width: 40px">Anzahl</td>
+				  <td class="dataTableHeadingContent" style="width: 30px">Anzahl</td>
 				  <td class="dataTableHeadingContent" style="width: 60px">Währung</td>
 				  <td class="dataTableHeadingContent" style="width: 120px">Verwendungszweck</td>
 				  <td class="dataTableHeadingContent" style="width: 40px">Bestellung zugewiesen</td>
 				  <td class="dataTableHeadingContent" style="width: 40px">Bestellnummer</td>
-				  <td class="dataTableHeadingContent" style="width: 60px">Rechnungsbetrag</td>
+				  <td class="dataTableHeadingContent" style="width: 80px">Rechnungsbetrag</td>
 				  <td class="dataTableHeadingContent" style="width: 40px">Status</td>
 			</tr>';
 
@@ -267,7 +290,7 @@ $result = mysqli_query($dbconn[0], $dbquery);
 if (mysqli_num_rows($result) > 0) {
     while($value = mysqli_fetch_assoc($result)) {
 
-		  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).'('.$value['currency'].')';}else{$orderprice='';};
+		  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
 		  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
 		  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 		  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
