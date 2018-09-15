@@ -176,7 +176,7 @@ do {
 			// check last hashvalue
 			$result = dbquery($dbconn[0], "SELECT transactionHash FROM transactions WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
 			
-			if (mysqli_num_rows($result) == 0){
+			if ((mysqli_num_rows($result) == 0) && ($value['transferToAddress'] == $shop_wallet_address)){
 				// extract currency name
 				$trans_currency = $value['tokenName'];	
 				
