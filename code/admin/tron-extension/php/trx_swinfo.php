@@ -29,18 +29,23 @@ include 'inc/global_settings.php';
 	// generate table
 	echo '<td class="boxCenter" width="100%" valign="top">
 				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('SYSTEM_INFO').'</div>
-							<div class="main" >
-								<table width="50%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container">
-								   <td><table class="gx-configuration">
-													<tbody>
-													
-													
-													
-													
-													</tbody>
-								    </table></td>
-								</tr>
-								</tbody></table>
-							</div>
+					<div class="main" >
+						<table width="30%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container">
+						   <td>
+							   <img align="middle" src="./tron-extension/img/troneurope_logo.png" width="300" height="100" align="bottom">							   
+							   <table class="gx-configuration">
+								   <tbody>
+									  <tr><th colspan="2" class="dataTableHeadingContent_gm"></tr>
+									  <tr><td>Software Version</td><td>0.1-16092018</td></tr>	
+									  <tr><td>Releasedate</td><td>16.09.2018</td></tr>
+									  <tr><td>Report an Issue</td><td><a href="https://github.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/issues/new" target="_blank" rel="noopener">Github Issue</a></td></tr>
+									  <tr><td>Website</td><td><a href="https://tron-europe.org" target="_blank" rel="noopener">tron-europe.org</a></td></tr>
+								   </tbody>
+								</table>
+							</td>
+						</tr>
+						</tbody>
+					</table>
+				</div>
 		</td>';
 ?>
