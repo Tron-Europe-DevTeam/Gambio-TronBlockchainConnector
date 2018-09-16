@@ -32,7 +32,7 @@ Gambio is one of the largest and most used webshops in Germany and parts of Euro
 2. Create a new database
 3. Create the following tables  (previously created database -> step 2)
 ```
-CREATE TABLE transactions(
+CREATE TABLE tbl_transaction(
     pkid BIGINT NOT NULL AUTO_INCREMENT,
     transactionHash varchar(255),
     block varchar(100),
@@ -42,30 +42,37 @@ CREATE TABLE transactions(
     amount varchar(100),
     tokenName varchar(100),
     data varchar(100),
-    confirmed varchar(100),
-    orderid varchar(100),
-    orderprice varchar(100),
-    currency varchar(100),
-    orderstatus varchar(100),
+    orderassignment varchar(100),
+	orderid varchar(100),
     PRIMARY KEY (pkid)
 ); 
 
-CREATE TABLE globalsetup(
+CREATE TABLE tbl_order(
+    pkid BIGINT NOT NULL AUTO_INCREMENT,
+    orderid varchar(100),
+    orderprice varchar(100),
+    currency varchar(100),
+    orderstatus varchar(100),	
+	PRIMARY KEY (pkid)
+); 
+
+CREATE TABLE tbl_systemsetup(
     pkid BIGINT NOT NULL AUTO_INCREMENT,
     parameter varchar(100),
     value varchar(255),
     PRIMARY KEY (pkid)
 ); 
+
 ```
 4. set default values
 ```
-INSERT INTO globalsetup (parameter,value) VALUES ('shopaddress','')
-INSERT INTO globalsetup (parameter,value) VALUES ('autosync','')
-INSERT INTO globalsetup (parameter,value) VALUES ('synctime','')
-INSERT INTO globalsetup (parameter,value) VALUES ('ordersync','')
-INSERT INTO globalsetup (parameter,value) VALUES ('walletuserassociation','')
-INSERT INTO globalsetup (parameter,value) VALUES ('syncdatacount','')
-INSERT INTO globalsetup (parameter,value) VALUES ('tblonlytransnote','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('shopaddress','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('autosync','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('synctime','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('ordersync','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('walletuserassociation','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('syncdatacount','');
+INSERT INTO tbl_systemsetup (parameter,value) VALUES ('tblonlytransnote','');
 ```
 5. create a user user and assign rights
 ```

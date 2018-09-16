@@ -72,6 +72,14 @@ $translationvar = array(
 			"german" => "Speichern",
 			"english" => "Save"
 			),
+	"GLOBAL_YES" => array (
+			"german" => "Ja",
+			"english" => "Yes"
+			),
+	"GLOBAL_NO" => array (
+			"german" => "Nein",
+			"english" => "No"
+			),
 	"TBL_TITLE_BLOCK" => array (
 			"german" => "Block",
 			"english" => "Block"
@@ -115,6 +123,22 @@ $translationvar = array(
 	"TBL_TITLE_STATUS" => array (
 			"german" => "Status",
 			"english" => "State"
+			),
+	"TBL_ORDERSTATE_1" => array (
+			"german" => "Offen",
+			"english" => "Open"
+			),
+	"TBL_ORDERSTATE_2" => array (
+			"german" => "Zahlung erhalten",
+			"english" => "Payment received"
+			),
+	"TBL_ORDERSTATE_3" => array (
+			"german" => "Rechnungsbetrag fehlerhaft",
+			"english" => "Incorrect bill amount"
+			),
+	"TBL_ORDERSTATE_4" => array (
+			"german" => "Coin/Token - Währungsfehler",
+			"english" => "Coin/Token - Currency error"
 			)
 );
 

@@ -73,11 +73,17 @@ function dbquery($conn,$query) {
     return mysqli_query($conn, $query);
 }
 
+// dbquery count function
+function dbquerycount($conn,$query) {
+    // send query as result
+    return mysqli_fetch_assoc(mysqli_query($conn, $query))['count'];
+}
+
 // query dbparameter function
 function getdbparameter($parameter) {
 	global $dbconn;
 	// generate query
-	$dbvalue = mysqli_fetch_assoc(mysqli_query($dbconn[0], "SELECT value FROM globalsetup WHERE parameter ='".$parameter."'"));
+	$dbvalue = mysqli_fetch_assoc(mysqli_query($dbconn[0], "SELECT value FROM tbl_systemsetup WHERE parameter ='".$parameter."'"));
     // send query
     return $dbvalue['value'];
 }
@@ -86,7 +92,7 @@ function getdbparameter($parameter) {
 function setdbparameter($parameter, $value) {
 	global $dbconn;
 	// update parameter
-	$dbresult = mysqli_query($dbconn[0], "UPDATE globalsetup SET value ='".$value."' WHERE parameter = '".$parameter."'");
+	$dbresult = mysqli_query($dbconn[0], "UPDATE tbl_systemsetup SET value ='".$value."' WHERE parameter = '".$parameter."'");
     // return result
     return $dbresult;
 }
@@ -169,14 +175,14 @@ do {
 		
 			// set value to default
 			$order_assignment = 0;
-			$order_state = 'Offen';
+			$order_state = 'TBL_ORDERSTATE_1';
 			$trans_orderid = '';
 			$trans_amount = '';
 			
 			// check last hashvalue
-			$result = dbquery($dbconn[0], "SELECT transactionHash FROM transactions WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
+			$result = dbquery($dbconn[0], "SELECT transactionHash FROM tbl_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
 			
-			if ((mysqli_num_rows($result) == 0) && ($value['transferToAddress'] == $shop_wallet_address)){
+			if (mysqli_num_rows($result) == 0){
 				// extract currency name
 				$trans_currency = $value['tokenName'];	
 				
@@ -186,9 +192,10 @@ do {
 				
 				// request transaction information -> note
 				$transferdata = json_decode(apiclient($url[1].$value['transactionHash'],$curlconn),true);
-				
+	
 				// parsing transaction information
-				if ($transferdata['data']<>''){
+				if (($transferdata['data']<>'') && ($value['transferToAddress'] == $shop_wallet_address)){	
+					
 					preg_match("/(\d+)/", str_replace('%20',' ',(hex2bin($transferdata['data']))) , $trans_orderid);
 					
 					// check orderinformations -> create sql query
@@ -216,19 +223,19 @@ do {
 							if ($orderdata['final_price'] == $value['amount']){
 								$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
 								$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'161',date("Y-m-d H:i:s",$value['timestamp']/1000),'Zahlung erhalten - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-								$order_state = "Zahlung erhalten";
+								$order_state = "TBL_ORDERSTATE_2";
 							}
 							// Value bill value does not match
 							else {
 								$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-								$order_state = "Betrag entspricht nicht der Rechnung";
+								$order_state = "TBL_ORDERSTATE_3";
 							}
 						}
 						
 						// currency of the transfer is not correct
 						else {
 							$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Coin/Token entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-							$order_state = "Coin/Token entspricht nicht der Rechnung";
+							$order_state = "TBL_ORDERSTATE_4";
 						}
 												
 						// check if ordersync option true
@@ -267,10 +274,19 @@ do {
 					$orderdata['currencytitle'] = '';
 					$orderdata['final_price'] = '';
 				}
-				// write values into table
-				$dbquery  = "INSERT INTO transactions( transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,confirmed,orderstatus,orderid,currency,orderprice ) ";
-				$dbquery .= "VALUES ('".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$order_state."','".$trans_orderid[1]."','".$orderdata['currencytitle']."','".$orderdata['final_price']."')";
+
+			// write orderdata into the db
+			if (dbquerycount($dbconn[0],"SELECT COUNT(*) AS count FROM tbl_order WHERE orderid = '".$trans_orderid[1]."'")=='0') {	
+				// write values into table				
+				$dbquery  = "INSERT INTO tbl_order ( orderid,orderprice,currency,orderstatus ) ";
+				$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
+				dbquery($dbconn[0],$dbquery);		
+			}
 				
+			// write transactiondata into the db
+			$dbquery  = "INSERT INTO tbl_transaction ( transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
+			$dbquery .= "VALUES ('".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
+
 				// check if data was written successfully
 				if (mysqli_query($dbconn[0], $dbquery)) {$synceddata++;}
 				else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}
@@ -294,16 +310,19 @@ function blockchain_gen_transtbl($dbconn,$column){
 			echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title']).'</td>';
 	};
 	echo'</tr>';
-	$dbquery = "SELECT * FROM transactions WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
-	$result = mysqli_query($dbconn[0], $dbquery);
+	// generate table query
+	$dbquery = "SELECT tbl_transaction.transactionHash,tbl_transaction.block,tbl_transaction.timestamp,tbl_transaction.transferFromAddress,tbl_transaction.transferToAddress,tbl_transaction.amount,tbl_transaction.tokenName,tbl_transaction.data,tbl_transaction.orderassignment,tbl_transaction.orderid, tbl_order.orderprice, tbl_order.currency, tbl_order.orderstatus FROM tbl_transaction "; 
+	$dbquery .= "INNER JOIN tbl_order ON  tbl_order.orderid = tbl_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
+	
+	$result = dbquery($dbconn[0], $dbquery);
 	if (mysqli_num_rows($result) > 0) {
 		while($value = mysqli_fetch_assoc($result)) {
 				if ((getdbparameter('tblonlytransnote')=='1') && ($value['data']=='')){} 
 				else {
-
+				  // format orderprice
 				  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-				  if ($value['confirmed']=='1'){$trnscnf='JA';} else {$trnscnf='NEIN';};
-				  
+				  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue($value['GLOBAL_YES']);} else {$trnscnf=fieldvalue($value['GLOBAL_NO']);};
+				  // generate row data
 				  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 				  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
 				  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
@@ -315,7 +334,7 @@ function blockchain_gen_transtbl($dbconn,$column){
 				  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 				  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 				  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-				  echo '<td class="dataTableContent">'.$value['orderstatus'].'</td>';
+				  echo '<td class="dataTableContent">'.fieldvalue($value['orderstatus']).'</td>';
 				  echo '</tr>';
 				}
 			}
