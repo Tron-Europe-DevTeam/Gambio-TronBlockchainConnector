@@ -72,6 +72,10 @@ $translationvar = array(
 			"german" => "Wallet Transaktionseingang",
 			"english" => "Wallet Receive Transaction"
 			),
+	"SYSTEM_INFO" => array (
+			"german" => "Info",
+			"english" => "Info"
+			),
 	"GLOBAL_SAVE" => array (
 			"german" => "Speichern",
 			"english" => "Save"
