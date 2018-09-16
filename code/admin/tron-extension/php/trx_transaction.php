@@ -43,6 +43,14 @@ $dbconn[1] = dbconnect($dbname[1]);
 // read shop address
 $shop_wallet_address = getdbparameter('shopaddress');
 
+echo '<table border="0" width="100%" cellspacing="0" cellpadding="2">
+		  <tr>
+				<td>
+					<div class="pageHeading">'.fieldvalue('WALLET_TRANSACTIONS').'</div>
+				</td>
+		  </tr>
+		</table>';
+			
 // check dbconnection
 if(dbconncheck()){
 	mysqli_close($dbconn[0]);

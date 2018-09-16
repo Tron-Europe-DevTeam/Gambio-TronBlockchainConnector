@@ -68,6 +68,10 @@ $translationvar = array(
 			"german" => "TRON Grundeinstellungen",
 			"english" => "TRON Defaultsettings"
 			),
+	"WALLET_TRANSACTIONS" => array (
+			"german" => "Wallet Transaktionseingang",
+			"english" => "Wallet Receive Transaction"
+			),
 	"GLOBAL_SAVE" => array (
 			"german" => "Speichern",
 			"english" => "Save"
