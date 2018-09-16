@@ -321,7 +321,7 @@ function blockchain_gen_transtbl($dbconn,$column){
 				else {
 				  // format orderprice
 				  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-				  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue($value['GLOBAL_YES']);} else {$trnscnf=fieldvalue($value['GLOBAL_NO']);};
+				  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES');} else {$trnscnf=fieldvalue('GLOBAL_NO');};
 				  // generate row data
 				  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 				  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
