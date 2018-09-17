@@ -1,9 +1,9 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: tron_wallet_configuration.php 
+   Filename: tron_wallet_softwareinfo.php 
    
-   15.09.2018 - Init Version
+   16.09.2018 - Init Version
    
    Released under the GNU General Public License (Version 2)
    [http://www.gnu.org/licenses/gpl-2.0.html]
@@ -49,7 +49,7 @@ require('includes/application_top.php');
 						</table>
 					</td>					
 					<!-- body_text //-->
-						<?php require('tron-extension/php/trx_settings.php'); ?>
+						<?php require('tron-extension/php/trx_swinfo.php'); ?>
 					<!-- body_text_eof //-->
 				</tr>
 			</table>

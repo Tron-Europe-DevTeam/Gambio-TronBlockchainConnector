@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: blockchain_sync.php 
+   Filename: global_settings.php 
    
    15.09.2018 - Init Version
    
@@ -21,35 +21,15 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+   
+// sql parameter
+$server = "127.0.0.1";
+$username = "";
+$password = "";
+$dbname[0] = "";
+$dbname[1] = "";
 
-// include external library
-include '/var/www/html/admin/tron-extension/php/inc/global_lib.php';
-include '/var/www/html/admin/tron-extension/php/inc/global_settings.php';
-// set default timezone
-date_default_timezone_set('europe/berlin');
-
-// vars set to default
-$autosync = 0;
-// init curl connection
-$curlconn = curl_init();
-// create db connection - backend
-$dbconn[0] = dbconnect($dbname[0]);
-// create db connection - gambio
-$dbconn[1] = dbconnect($dbname[1]);
-// read shop address
-$shop_wallet_address = getdbparameter('shopaddress');
-
-// check dbconnection
-if(dbconncheck()){
-	mysqli_close($dbconn[0]);
-	mysqli_close($dbconn[1]);
-}
-else {	
-	blockchainsync($dbconn,$curlconn,$shop_wallet_address);
-}
-
-// close request to clear up some resources
-    curl_close($curlconn);
-	mysqli_close($dbconn[0]);
-	mysqli_close($dbconn[1]);
+// Tron API URL definition
+$url[0] = 'https://api.tronscan.org/api/transfer?address=';
+$url[1] = 'https://api.tronscan.org/api/transaction/';
 ?>

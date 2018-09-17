@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: blockchain_sync.php 
+   Filename: trx_transaction.var.php 
    
    15.09.2018 - Init Version
    
@@ -21,35 +21,51 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-
-// include external library
-include '/var/www/html/admin/tron-extension/php/inc/global_lib.php';
-include '/var/www/html/admin/tron-extension/php/inc/global_settings.php';
-// set default timezone
-date_default_timezone_set('europe/berlin');
-
-// vars set to default
-$autosync = 0;
-// init curl connection
-$curlconn = curl_init();
-// create db connection - backend
-$dbconn[0] = dbconnect($dbname[0]);
-// create db connection - gambio
-$dbconn[1] = dbconnect($dbname[1]);
-// read shop address
-$shop_wallet_address = getdbparameter('shopaddress');
-
-// check dbconnection
-if(dbconncheck()){
-	mysqli_close($dbconn[0]);
-	mysqli_close($dbconn[1]);
-}
-else {	
-	blockchainsync($dbconn,$curlconn,$shop_wallet_address);
-}
-
-// close request to clear up some resources
-    curl_close($curlconn);
-	mysqli_close($dbconn[0]);
-	mysqli_close($dbconn[1]);
+ 
+// set table column
+$column = array( 
+	"0" => array (
+			"title" => "TBL_TITLE_BLOCK",	
+			"width" => "30px"),
+	"1" => array (
+			"title" => "TBL_TITLE_TIMESTAMP",
+			"width" => "60px"
+			),
+	"2" => array (
+			"title" => "TBL_TITLE_TRANSACTION_HASH",
+			"width" => "120px"
+			),
+	"3" => array (
+			"title" => "TBL_TITLE_SENDER",
+			"width" => "120px"
+			),
+	"4" => array (
+			"title" => "TBL_TITLE_QUANTITY",
+			"width" => "30px"
+			),
+	"5" => array (
+			"title" => "TBL_TITLE_CURRENCY",
+			"width" => "60px"
+			),
+	"6" => array (
+			"title" => "TBL_TITLE_PURPOSE_OF_USE",
+			"width" => "120px"
+			),
+	"7" => array (
+			"title" => "TBL_TITLE_ORDERASSIGNMENT",
+			"width" => "40px"
+			),
+	"8" => array (
+			"title" => "TBL_TITLE_ORDERNUMBER",
+			"width" => "40px"
+			),
+	"9" => array (
+			"title" => "TBL_TITLE_TOTAL_AMOUNT",
+			"width" => "80px"
+			),
+	"10" => array (
+			"title" => "TBL_TITLE_STATUS",
+			"width" => "40px"
+			)
+);
 ?>

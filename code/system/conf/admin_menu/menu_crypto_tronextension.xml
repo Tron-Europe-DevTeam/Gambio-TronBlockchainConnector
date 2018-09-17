@@ -10,8 +10,7 @@
     <!-- TRON Blockchain extension - Anpassung Menüpunkt -->
     <menugroup id="BOX_HEADING_TRON_BLOCKCHAIN" sort="30" background="kunden.png" class="fa fa-retweet" title="TRON Blockchain">
       <menuitem sort="10" link="tron_wallet_configuration.php" title="Grundeinstellungen" />
-      <menuitem sort="20" link="tron_wallet_configuration1.php"  title="Unvollständige Transaktionen" />
+      <menuitem sort="20" link="tron_wallet_softwareinfo.php"  title="Info" />
   	</menugroup>
-
   <!-- EOM -->
 </admin_menu>
