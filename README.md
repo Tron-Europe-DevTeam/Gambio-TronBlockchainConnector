@@ -29,10 +29,9 @@ Gambio is one of the largest and most used webshops in Germany and parts of Euro
 
 ## Installation
 1. Copy the folder into the Gambio Main Directory
-2. Create a new database
-3. Create the following tables  (previously created database -> step 2)
+2. Create the following tables 
 ```
-CREATE TABLE tbl_transaction(
+CREATE TABLE trx_transaction(
     pkid BIGINT NOT NULL AUTO_INCREMENT,
     transactionHash varchar(255),
     block varchar(100),
@@ -47,7 +46,7 @@ CREATE TABLE tbl_transaction(
     PRIMARY KEY (pkid)
 ); 
 
-CREATE TABLE tbl_order(
+CREATE TABLE trx_order(
     pkid BIGINT NOT NULL AUTO_INCREMENT,
     orderid varchar(100),
     orderprice varchar(100),
@@ -56,7 +55,7 @@ CREATE TABLE tbl_order(
 	PRIMARY KEY (pkid)
 ); 
 
-CREATE TABLE tbl_systemsetup(
+CREATE TABLE trx_systemsetup(
     pkid BIGINT NOT NULL AUTO_INCREMENT,
     parameter varchar(100),
     value varchar(255),
@@ -64,42 +63,42 @@ CREATE TABLE tbl_systemsetup(
 ); 
 
 ```
-4. set default values
+3. set default values
 ```
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('shopaddress','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('autosync','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('synctime','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('ordersync','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('walletuserassociation','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('syncdatacount','');
-INSERT INTO tbl_systemsetup (parameter,value) VALUES ('tblonlytransnote','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('shopaddress','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('autosync','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('synctime','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('ordersync','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('walletuserassociation','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('syncdatacount','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('tblonlytransnote','');
 ```
-5. create a user user and assign rights
+4. create a user user and assign rights
 ```
 <USERNAME> => DB Username
 <PASSWORD> => DB Password
-<TRONDATABASE> => Name of the TRON Module Database
 <GAMBIODATABASE> => Name of the Gambio Database
 
 CREATE USER '<USERNAME>'@'localhost' IDENTIFIED BY '<PASSWORD>';
-GRANT ALL PRIVILEGES ON <TRONDATABASE>.* TO '<USERNAME>'@'localhost';
 GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.orders TO '<USERNAME>'@'localhost';
 GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.orders_status_history TO '<USERNAME>'@'localhost';
 GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.customers_memo TO '<USERNAME>'@'localhost';
 GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.currencies TO '<USERNAME>'@'localhost';
 GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.orders_products TO '<USERNAME>'@'localhost';
+GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.trx_transaction TO '<USERNAME>'@'localhost';
+GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.trx_order TO '<USERNAME>'@'localhost';
+GRANT ALL PRIVILEGES ON <GAMBIODATABASE>.trx_systemsetup TO '<USERNAME>'@'localhost';
 
 FLUSH PRIVILEGES;
 ```
 
-6. change the connection settings -> tron-extension/inc/global_settings.php
+5. change the connection settings -> tron-extension/php/inc/global_settings.php
 ```
 // sql parameter
 $server = "127.0.0.1";  => SQL Server
 $username = "";         => DB Username
 $password = "";         => DB Password
-$dbname[0] = "";        => Name of the TRON Module Database
-$dbname[1] = "";        => Name of the TRON Module Database
+$dbname[0] = "";        => Name of the Gambio Database
 ```
 
 ## Roadmap 
