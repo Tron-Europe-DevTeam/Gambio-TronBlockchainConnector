@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: trx_settings.php 
+   Filename: trx_swinfo.php 
    
    15.09.2018 - Init Version
    
@@ -22,9 +22,9 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
    
-// include external library
-include 'inc/global_lib.php';
-include 'inc/global_settings.php';
+	// include external library
+	include 'inc/global_lib.php';
+	include 'inc/global_settings.php';
 
 	// generate table
 	echo '<td class="boxCenter" width="100%" valign="top">

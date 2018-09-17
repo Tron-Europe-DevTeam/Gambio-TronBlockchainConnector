@@ -21,51 +21,52 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
- 
-// set table column
-$column = array( 
-	"0" => array (
-			"title" => "TBL_TITLE_BLOCK",	
-			"width" => "30px"),
-	"1" => array (
-			"title" => "TBL_TITLE_TIMESTAMP",
-			"width" => "60px"
-			),
-	"2" => array (
-			"title" => "TBL_TITLE_TRANSACTION_HASH",
-			"width" => "120px"
-			),
-	"3" => array (
-			"title" => "TBL_TITLE_SENDER",
-			"width" => "120px"
-			),
-	"4" => array (
-			"title" => "TBL_TITLE_QUANTITY",
-			"width" => "30px"
-			),
-	"5" => array (
-			"title" => "TBL_TITLE_CURRENCY",
-			"width" => "60px"
-			),
-	"6" => array (
-			"title" => "TBL_TITLE_PURPOSE_OF_USE",
-			"width" => "120px"
-			),
-	"7" => array (
-			"title" => "TBL_TITLE_ORDERASSIGNMENT",
-			"width" => "40px"
-			),
-	"8" => array (
-			"title" => "TBL_TITLE_ORDERNUMBER",
-			"width" => "40px"
-			),
-	"9" => array (
-			"title" => "TBL_TITLE_TOTAL_AMOUNT",
-			"width" => "80px"
-			),
-	"10" => array (
-			"title" => "TBL_TITLE_STATUS",
-			"width" => "40px"
-			)
-);
+	 
+	// set table column
+	$column = array( 
+		"0" => array (
+				"title" => "TBL_TITLE_BLOCK",	
+				"width" => "30px"),
+		"1" => array (
+				"title" => "TBL_TITLE_TIMESTAMP",
+				"width" => "60px"
+				),
+		"2" => array (
+				"title" => "TBL_TITLE_TRANSACTION_HASH",
+				"width" => "120px"
+				),
+		"3" => array (
+				"title" => "TBL_TITLE_SENDER",
+				"width" => "120px"
+				),
+		"4" => array (
+				"title" => "TBL_TITLE_QUANTITY",
+				"width" => "30px"
+				),
+		"5" => array (
+				"title" => "TBL_TITLE_CURRENCY",
+				"width" => "60px"
+				),
+		"6" => array (
+				"title" => "TBL_TITLE_PURPOSE_OF_USE",
+				"width" => "120px"
+				),
+		"7" => array (
+				"title" => "TBL_TITLE_ORDERASSIGNMENT",
+				"width" => "40px"
+				),
+		"8" => array (
+				"title" => "TBL_TITLE_ORDERNUMBER",
+				"width" => "40px"
+				),
+		"9" => array (
+				"title" => "TBL_TITLE_TOTAL_AMOUNT",
+				"width" => "80px"
+				),
+		"10" => array (
+				"title" => "TBL_TITLE_STATUS",
+				"width" => "40px"
+				)
+	);
+
 ?>
