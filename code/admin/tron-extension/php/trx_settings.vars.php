@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: trx_settings_menue.php 
+   Filename: trx_settings_vars.php 
    
    15.09.2018 - Init Version
    
@@ -21,66 +21,67 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
- 
-// Settingsmenue
-$topic = array( 
-	"0" => array (
-			"title" => "WALLET_SETTINGS",
-			"data" => array (
-				"0" => array (
-						"name"  => "TRON_WALLET_ADDRESS", 	
-						"value" => getdbparameter('shopaddress'),
-						"type"  => "edit",
-						"id"    => "shopaddress"
-				),
-				"1" => array (
-						"name"  => "BLOCKCHAIN_SYNC", 	
-						"value" => getdbparameter('autosync'),
-						"type"  => "switch",
-						"id"    => "autosync"
-				),
-				"2" => array (
-						"name"  => "TBL_ONLY_TRANS_WITH_NOTES", 	
-						"value" => getdbparameter('tblonlytransnote'),
-						"type"  => "switch",
-						"id"    => "tblonlytransnote"
+	 
+	// Settingsmenue
+	$topic = array( 
+		"0" => array (
+				"title" => "WALLET_SETTINGS",
+				"data" => array (
+					"0" => array (
+							"name"  => "TRON_WALLET_ADDRESS", 	
+							"value" => getdbparameter('shopaddress'),
+							"type"  => "edit",
+							"id"    => "shopaddress"
+					),
+					"1" => array (
+							"name"  => "BLOCKCHAIN_SYNC", 	
+							"value" => getdbparameter('autosync'),
+							"type"  => "switch",
+							"id"    => "autosync"
+					),
+					"2" => array (
+							"name"  => "TBL_ONLY_TRANS_WITH_NOTES", 	
+							"value" => getdbparameter('tblonlytransnote'),
+							"type"  => "switch",
+							"id"    => "tblonlytransnote"
+					)
+				)
+			),
+		"1" => array (
+				"title" => "SYNC_INFOS", 
+				"data" => array (
+					"0" => array (
+							"name"  => "SYNC_TIMESTAMP", 	
+							"value" => getdbparameter('synctime'),
+							"type"  => "edit_disabled",
+							"id"    => "synctime"
+					),
+					
+					"1" => array (
+							"name"  => "SYNC_TRANSACTIONS", 	
+							"value" => getdbparameter('syncdatacount'),
+							"type"  => "edit_disabled",
+							"id"    => "syncdatacount"
+					)
+				)
+			),
+		"2" => array (
+				"title" => "BACKEND_SETTINGS", 
+				"data" => array (
+					"0" => array (
+							"name"  => "ORDER_ASSIGNMENT", 	
+							"value" => getdbparameter('ordersync'),
+							"type"  => "switch",
+							"id"    => "ordersync"
+					),
+					"1" => array (
+							"name"  => "WALLET_ASSOCIATION", 	
+							"value" => getdbparameter('walletuserassociation'),
+							"type"  => "switch",
+							"id"    => "walletuserassociation"
+					)
 				)
 			)
-		),
-	"1" => array (
-			"title" => "SYNC_INFOS", 
-			"data" => array (
-				"0" => array (
-						"name"  => "SYNC_TIMESTAMP", 	
-						"value" => getdbparameter('synctime'),
-						"type"  => "edit_disabled",
-						"id"    => "synctime"
-				),
-				
-				"1" => array (
-						"name"  => "SYNC_TRANSACTIONS", 	
-						"value" => getdbparameter('syncdatacount'),
-						"type"  => "edit_disabled",
-						"id"    => "syncdatacount"
-				)
-			)
-		),
-	"2" => array (
-			"title" => "BACKEND_SETTINGS", 
-			"data" => array (
-				"0" => array (
-						"name"  => "ORDER_ASSIGNMENT", 	
-						"value" => getdbparameter('ordersync'),
-						"type"  => "switch",
-						"id"    => "ordersync"
-				),
-				"1" => array (
-						"name"  => "WALLET_ASSOCIATION", 	
-						"value" => getdbparameter('walletuserassociation'),
-						"type"  => "switch",
-						"id"    => "walletuserassociation"
-				)
-			)
-		)
-);
+	);
+
 ?>
