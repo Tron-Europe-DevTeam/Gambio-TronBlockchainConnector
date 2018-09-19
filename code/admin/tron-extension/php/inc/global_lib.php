@@ -124,26 +124,26 @@
 		$tabledata = '';
 		// create value
 		foreach ($topic as $value) {
-			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title']).'</th></tr>';
+			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title'],'language').'</th></tr>';
 			foreach ($value['data'] as $data) {
 				// input field									 
 				if ($data['type'] == 'edit') {
 					$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
+					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name'],'language').'</label></td>';
 					$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" name="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
 				}	
 				
 				// input field disabled
 				else if ($data['type'] == 'edit_disabled') {
 					$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
+					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name'],'language').'</label></td>';
 					$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" value="'.$data['value'].'" required="" disabled></td></tr>';
 				}
 				
 				// switch field
 				else if ($data['type'] == 'switch') {
 				$tabledata.='<tr>';
-				$tabledata.=' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name']);
+				$tabledata.=' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name'],'language');
 				$tabledata.=' </td>';
 				$tabledata.=' <td class="dataTableContent_gm">';
 				$tabledata.='	<div class="gx-container" data-gx-widget="checkbox">';
@@ -310,7 +310,7 @@
 				<tbody>
 					<tr class="dataTableHeadingRow gx-container">';				  
 		foreach ($column as $columndata) {
-				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title']).'</td>';
+				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
 		};
 		echo'</tr>';
 		// generate table query
@@ -324,7 +324,7 @@
 					else {
 					  // format orderprice
 					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES');} else {$trnscnf=fieldvalue('GLOBAL_NO');};
+					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES','language');} else {$trnscnf=fieldvalue('GLOBAL_NO','language');};
 					  // generate row data
 					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
@@ -337,7 +337,7 @@
 					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td class="dataTableContent">'.fieldvalue($value['orderstatus']).'</td>';
+					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
 					  echo '</tr>';
 					}
 				}

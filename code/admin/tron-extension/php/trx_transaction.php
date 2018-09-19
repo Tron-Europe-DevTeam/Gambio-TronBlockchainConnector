@@ -44,7 +44,7 @@
 		
 		// page header
 		echo '<table border="0" width="100%" cellspacing="0" cellpadding="2">
-			  <tr><td><div class="pageHeading">'.fieldvalue('WALLET_TRANSACTIONS').'</div></td></tr></table>';
+			  <tr><td><div class="pageHeading">'.fieldvalue('WALLET_TRANSACTIONS','language').'</div></td></tr></table>';
 			  
 		// autosync check
 		if (isset($_GET['autosync'])){
