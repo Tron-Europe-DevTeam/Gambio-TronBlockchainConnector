@@ -302,6 +302,15 @@
 			"data" => array (
 					"label" => "label-error"
 				)
+			),
+		"TRX_ORDERSTATE_5" => array (
+			"language" => array (
+				"german" => "Kein Verwendungszweck",
+				"english" => "No purpose of use"
+				),
+			"data" => array (
+					"label" => "label-processing"
+				)
 			)
 	);
 
