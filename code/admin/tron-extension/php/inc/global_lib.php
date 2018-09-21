@@ -160,12 +160,12 @@
 
 	// function blockchainsync
 	function blockchainsync($dbconn,$curlconn,$shop_wallet_address){
+		$synceddata = 0;
 		// vars set to default
 		$page = 0;
-		$synceddata = 0;
 		$procstop = 0;
 		global $url;
-		do {		
+		do {			
 			// set api request url
 			$urladdress = $url[0].$shop_wallet_address.'&start='.$page.'&limit=100&sort=-timestamp';
 			$page = $page + 100;
@@ -177,8 +177,8 @@
 				
 					// set value to default
 					$order_assignment = 0;
-					$order_state = 'TRX_ORDERSTATE_1';
-					$trans_orderid = '';
+					$transaction_state = 'TRX_TRANSACTIONTATE_1';
+					$trans_orderid[1] = '';
 					$trans_amount = '';
 					
 					// check last hashvalue
@@ -210,6 +210,9 @@
 							
 							// check if order exists
 							if (mysqli_num_rows($gambioresult) > 0) {
+								// order found
+								$transaction_state = 'TRX_TRANSACTIONTATE_2';
+								
 								// orderid and purpose of use match
 								$order_assignment = 1;
 								
@@ -225,19 +228,19 @@
 									if ($orderdata['final_price'] == $value['amount']){
 										$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
 										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'161',date("Y-m-d H:i:s",$value['timestamp']/1000),'Zahlung erhalten - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-										$order_state = "TRX_ORDERSTATE_2";
+										$order_state = "TRX_ORDERSTATE_1";
 									}
 									// Value bill value does not match
 									else {
 										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-										$order_state = "TRX_ORDERSTATE_3";
+										$order_state = "TRX_ORDERSTATE_2";
 									}
 								}
 								
 								// currency of the transfer is not correct
 								else {
 									$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Coin/Token entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-									$order_state = "TRX_ORDERSTATE_4";
+									$order_state = "TRX_ORDERSTATE_3";
 								}
 														
 								// check if ordersync option true
@@ -262,33 +265,35 @@
 										dbquery($dbconn,"INSERT INTO customers_memo(customers_id,memo_date,memo_title,memo_text) VALUES ('".$orderdata['customers_id']."','".date("d.m.Y",time())."','TRON Wallet Address','".$value['transferFromAddress']."')");
 									}
 								}
+								
+								// write orderdata into the db
+								if ((dbquerycount($dbconn,"SELECT COUNT(*) AS count FROM trx_order WHERE orderid = '".$trans_orderid[1]."'")=='0') && ($trans_orderid[1]<>'')) {	
+									// write values into table				
+									$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
+									$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
+									dbquery($dbconn,$dbquery);		
+								}
+								
 							} 
 							else {
 								// reset order id
+								$transaction_state = 'TRX_TRANSACTIONTATE_3';	
 								$trans_orderid[1] = '';
-								$orderdata['currencytitle'] = '';
-								$orderdata['final_price'] = '';
-							}					
+							}		
+							
 						} 
 						else {
+							if (($transferdata['data']=='') && ($value['transferToAddress'] == $shop_wallet_address)){
+								$transaction_state = 'TRX_TRANSACTIONTATE_4';	
+							}
 							// set orderstate
-							$order_state = 'TRX_ORDERSTATE_5';
-							$orderdata['currencytitle'] = '';
-							$orderdata['final_price'] = '';
-						}
-
-					// write orderdata into the db
-					if (dbquerycount($dbconn,"SELECT COUNT(*) AS count FROM trx_order WHERE orderid = '".$trans_orderid[1]."'")=='0') {	
-						// write values into table				
-						$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
-						$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
-						dbquery($dbconn,$dbquery);		
-					}
+							$trans_orderid[1] = '';
+						}						
+					
+						// write transactiondata into the db
+						$dbquery  = "INSERT INTO trx_transaction ( transactionstate,transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
+						$dbquery .= "VALUES ('".$transaction_state."','".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
 						
-					// write transactiondata into the db
-					$dbquery  = "INSERT INTO trx_transaction ( transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
-					$dbquery .= "VALUES ('".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
-
 						// check if data was written successfully
 						if (mysqli_query($dbconn, $dbquery)) {$synceddata++;}
 						else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}
@@ -313,9 +318,9 @@
 		};
 		echo'</tr>';
 		// generate table query
-		$dbquery = "SELECT trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
-		$dbquery .= "INNER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
-		
+		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
+		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
+
 		$result = dbquery($dbconn, $dbquery);
 		if (mysqli_num_rows($result) > 0) {
 			while($value = mysqli_fetch_assoc($result)) {
@@ -324,6 +329,7 @@
 					  // format orderprice
 					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
 					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES','language');} else {$trnscnf=fieldvalue('GLOBAL_NO','language');};
+					  if ($value['orderstatus']<>''){ $status=fieldvalue($value['orderstatus'],'language'); $label=fieldvalue($value['orderstatus'],'label');} else { $status=fieldvalue($value['transactionstate'],'language'); $label=fieldvalue($value['transactionstate'],'label');}
 					  // generate row data
 					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
@@ -336,7 +342,7 @@
 					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
+					  echo '<td class="dataTableContent"><span class="label '.$label.'">'.$status.'</span></td>';
 					  echo '</tr>';
 					}
 				}

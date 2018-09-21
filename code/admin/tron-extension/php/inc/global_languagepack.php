@@ -269,15 +269,6 @@
 			),
 		"TRX_ORDERSTATE_1" => array (
 			"language" => array (
-					"german" => "Offen",
-					"english" => "Open"
-					),
-			"data" => array (
-					"label" => "label-processing"
-				)
-			),
-		"TRX_ORDERSTATE_2" => array (
-			"language" => array (
 					"german" => "Zahlung erhalten",
 					"english" => "Payment received"
 				),
@@ -285,7 +276,7 @@
 					"label" => "label-success"
 				)
 			),	
-		"TRX_ORDERSTATE_3" => array (
+		"TRX_ORDERSTATE_2" => array (
 			"language" => array (
 				"german" => "Rechnungsbetrag fehlerhaft",
 				"english" => "Incorrect bill amount"
@@ -294,7 +285,7 @@
 					"label" => "label-error"
 				)
 			),
-		"TRX_ORDERSTATE_4" => array (
+		"TRX_ORDERSTATE_3" => array (
 			"language" => array (
 				"german" => "Währungsfehler",
 				"english" => "Currency error"
@@ -303,7 +294,34 @@
 					"label" => "label-error"
 				)
 			),
-		"TRX_ORDERSTATE_5" => array (
+		"TRX_TRANSACTIONTATE_1" => array (
+			"language" => array (
+					"german" => "Offen",
+					"english" => "Open"
+					),
+			"data" => array (
+					"label" => "label-processing"
+				)
+			),
+		"TRX_TRANSACTIONTATE_2" => array (
+			"language" => array (
+					"german" => "Bestellung zugewiesen",
+					"english" => "Order assigned"
+					),
+			"data" => array (
+					"label" => "label-processing"
+				)
+			),
+		"TRX_TRANSACTIONTATE_3" => array (
+			"language" => array (
+					"german" => "Keine Bestellung gefunden",
+					"english" => "No Order found"
+					),
+			"data" => array (
+					"label" => "label-processing"
+				)
+			),
+		"TRX_TRANSACTIONTATE_4" => array (
 			"language" => array (
 				"german" => "Kein Verwendungszweck",
 				"english" => "No purpose of use"

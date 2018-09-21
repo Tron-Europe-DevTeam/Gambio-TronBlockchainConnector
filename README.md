@@ -41,6 +41,7 @@ CREATE TABLE trx_transaction(
     amount varchar(100),
     tokenName varchar(100),
     data varchar(100),
+    transactionstate varchar(100),
     orderassignment varchar(100),
 	orderid varchar(100),
     PRIMARY KEY (pkid)
