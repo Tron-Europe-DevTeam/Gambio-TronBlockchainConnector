@@ -99,7 +99,17 @@
 		// return result
 		return $dbresult;
 	}
-
+    
+	// check purpose of use for db
+	function format_dbdata($value,$length){
+		// check stringlength
+		if ( strlen( $value ) > $length ){
+			$value = substr ( $value ,0 ,$length );
+		}
+		// return value
+		return $value;			
+	}
+	
 	// set gambio orderhistory function
 	function set_dbquery_gambio_orderhistory($order_id,$orders_status_id,$date_added,$comments) {
 		// return result
@@ -157,7 +167,7 @@
 		}
 		return $tabledata;
 	}
-
+	
 	// function blockchainsync
 	function blockchainsync($dbconn,$curlconn,$shop_wallet_address){
 		$synceddata = 0;
@@ -194,17 +204,17 @@
 						
 						// request transaction information -> note
 						$transferdata = json_decode(apiclient($url[1].$value['transactionHash'],$curlconn),true);
-			
+									
 						// parsing transaction information
 						if (($transferdata['data']<>'') && ($value['transferToAddress'] == $shop_wallet_address)){	
 							
-							preg_match("/(\d+)/", str_replace('%20',' ',(hex2bin($transferdata['data']))) , $trans_orderid);
+							preg_match("/(\d+)/", rawurldecode(hex2bin(format_dbdata($transferdata['data'],200))) , $trans_orderid);
 							
 							// check orderinformations -> create sql query
 							$gambiopaymentcheck = "SELECT orders.customers_id AS customers_id, orders.orders_id AS orders_id, orders.orders_status AS orders_status, orders_products.final_price AS final_price, currencies.title AS currencytitle, orders.currency AS currency, orders.currency_value AS currency_value FROM orders ";
 							$gambiopaymentcheck .= "INNER JOIN orders_products ON orders.orders_id = orders_products.orders_id ";
 							$gambiopaymentcheck .= "INNER JOIN currencies ON orders.currency = currencies.code WHERE orders.orders_id ='".$trans_orderid[1]."'";
-							
+
 							// check orderinformations -> send sql query to database
 							$gambioresult = mysqli_query($dbconn, $gambiopaymentcheck);
 							
@@ -288,12 +298,11 @@
 							}
 							// set orderstate
 							$trans_orderid[1] = '';
-						}						
-					
+						}	
+						
 						// write transactiondata into the db
 						$dbquery  = "INSERT INTO trx_transaction ( transactionstate,transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
-						$dbquery .= "VALUES ('".$transaction_state."','".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
-						
+						$dbquery .= "VALUES ('".$transaction_state."','".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".format_dbdata($transferdata['data'],200)."','".$order_assignment."','".$trans_orderid[1]."')";
 						// check if data was written successfully
 						if (mysqli_query($dbconn, $dbquery)) {$synceddata++;}
 						else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}
@@ -306,8 +315,7 @@
 			}
 			while(((count($jresponse['data']))>0)&&($procstop==0)); 
 	}
-
-
+	
 	// function blockchainsync
 	function blockchain_gen_transtbl($dbconn,$column){
 		echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
@@ -338,7 +346,7 @@
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
 					  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
 					  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
-					  echo '<td class="dataTableContent">'.str_replace('%20',' ',(hex2bin($value['data']))).'</td>';
+					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
 					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
