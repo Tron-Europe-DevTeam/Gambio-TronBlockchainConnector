@@ -55,7 +55,7 @@
 		
 		// generate table
 		echo '<td class="boxCenter" width="100%" valign="top">
-					<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('BLOCKCHAIN_DEFAULTSETTINGS').'</div>
+					<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('BLOCKCHAIN_DEFAULTSETTINGS','language').'</div>
 					<div class="main" >
 						<form action="'.xtc_href_link('tron_wallet_configuration.php', 'content='.$_GET['content']).' method="post">
 						<table width="50%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container"><td>
@@ -64,7 +64,7 @@
 									</table>
 							</td></tr></tbody></table>						
 						<div class="grid bottom-save-bar-content">
-							<input type="submit" class="button btn btn-primary pull-right" name="action" value="'.fieldvalue('GLOBAL_SAVE').'"/>
+							<input type="submit" class="button btn btn-primary pull-right" name="action" value="'.fieldvalue('GLOBAL_SAVE','language').'"/>
 						</div>
 						</form>
 					</div>

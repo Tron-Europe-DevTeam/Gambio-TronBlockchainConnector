@@ -33,6 +33,8 @@ require('includes/application_top.php');
 <title><?php echo TITLE; ?></title>
 <link rel="stylesheet" type="text/css" href="html/assets/styles/legacy/stylesheet.css">
 <link rel="stylesheet" type="text/css" href="html/assets/styles/legacy/global-colorpicker.css" />
+<link rel="stylesheet" href="html/assets/styles/admin.min.css">
+<link rel="stylesheet" type="text/css" href="tron-extension/css/trx_main_style.css" />
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 	<!-- header //-->

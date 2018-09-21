@@ -28,7 +28,7 @@
 
 	// generate table
 	echo '<td class="boxCenter" width="100%" valign="top">
-				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('SYSTEM_INFO').'</div>
+				<div class="pageHeading" float: none; left: 200px; top: 46px; position: fixed;">'.fieldvalue('SYSTEM_INFO','language').'</div>
 					<div class="main" >
 						<table width="30%" cellspacing="0" cellpadding="0"><tbody><tr class="gx-container">
 						   <td>

@@ -124,26 +124,26 @@
 		$tabledata = '';
 		// create value
 		foreach ($topic as $value) {
-			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title']).'</th></tr>';
+			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title'],'language').'</th></tr>';
 			foreach ($value['data'] as $data) {
 				// input field									 
 				if ($data['type'] == 'edit') {
 					$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
+					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name'],'language').'</label></td>';
 					$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" name="'.$data['id'].'" value="'.$data['value'].'" required="" ></td></tr>';
 				}	
 				
 				// input field disabled
 				else if ($data['type'] == 'edit_disabled') {
 					$tabledata .= '<tr class="visibility_switcher"><td class="dataTableContent_gm configuration-label">';
-					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name']).'</label></td>';
+					$tabledata .= '<label for="'.$data['id'].'">'.fieldvalue($data['name'],'language').'</label></td>';
 					$tabledata .= '<td class="dataTableContent_gm"><input style="width:300px;" value="'.$data['value'].'" required="" disabled></td></tr>';
 				}
 				
 				// switch field
 				else if ($data['type'] == 'switch') {
 				$tabledata.='<tr>';
-				$tabledata.=' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name']);
+				$tabledata.=' <td class="dataTableContent_gm configuration-label">'.fieldvalue($data['name'],'language');
 				$tabledata.=' </td>';
 				$tabledata.=' <td class="dataTableContent_gm">';
 				$tabledata.='	<div class="gx-container" data-gx-widget="checkbox">';
@@ -160,147 +160,151 @@
 
 	// function blockchainsync
 	function blockchainsync($dbconn,$curlconn,$shop_wallet_address){
-	do {
+		$synceddata = 0;
 		// vars set to default
 		$page = 0;
-		$synceddata = 0;
 		$procstop = 0;
 		global $url;
-		
-		// set api request url
-		$urladdress = $url[0].$shop_wallet_address.'&start='.$page.'&limit=100&sort=-timestamp';
-		$page = $page + 100;
-		
-		// send api request
-		$jresponse = json_decode(apiclient($urladdress,$curlconn),true);
-
-		foreach ($jresponse['data'] as $value) {
+		do {			
+			// set api request url
+			$urladdress = $url[0].$shop_wallet_address.'&start='.$page.'&limit=100&sort=-timestamp';
+			$page = $page + 100;
 			
-				// set value to default
-				$order_assignment = 0;
-				$order_state = 'TRX_ORDERSTATE_1';
-				$trans_orderid = '';
-				$trans_amount = '';
+			// send api request
+			$jresponse = json_decode(apiclient($urladdress,$curlconn),true);
+
+			foreach ($jresponse['data'] as $value) {
 				
-				// check last hashvalue
-				$result = dbquery($dbconn, "SELECT transactionHash FROM trx_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
-				
-				if (mysqli_num_rows($result) == 0){
-					// extract currency name
-					$trans_currency = $value['tokenName'];	
+					// set value to default
+					$order_assignment = 0;
+					$transaction_state = 'TRX_TRANSACTIONTATE_1';
+					$trans_orderid[1] = '';
+					$trans_amount = '';
 					
-					// formating TRX amount (sun)
-					if ($trans_currency == 'TRX'){$trans_amount = $value['amount']/1000000;}
-					else {$trans_amount = $value['amount'];}		
+					// check last hashvalue
+					$result = dbquery($dbconn, "SELECT transactionHash FROM trx_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
 					
-					// request transaction information -> note
-					$transferdata = json_decode(apiclient($url[1].$value['transactionHash'],$curlconn),true);
-		
-					// parsing transaction information
-					if (($transferdata['data']<>'') && ($value['transferToAddress'] == $shop_wallet_address)){	
+					if (mysqli_num_rows($result) == 0){
+						// extract currency name
+						$trans_currency = $value['tokenName'];	
 						
-						preg_match("/(\d+)/", str_replace('%20',' ',(hex2bin($transferdata['data']))) , $trans_orderid);
+						// formating TRX amount (sun)
+						if ($trans_currency == 'TRX'){$trans_amount = $value['amount']/1000000;}
+						else {$trans_amount = $value['amount'];}		
 						
-						// check orderinformations -> create sql query
-						$gambiopaymentcheck = "SELECT orders.customers_id AS customers_id, orders.orders_id AS orders_id, orders.orders_status AS orders_status, orders_products.final_price AS final_price, currencies.title AS currencytitle, orders.currency AS currency, orders.currency_value AS currency_value FROM orders ";
-						$gambiopaymentcheck .= "INNER JOIN orders_products ON orders.orders_id = orders_products.orders_id ";
-						$gambiopaymentcheck .= "INNER JOIN currencies ON orders.currency = currencies.code WHERE orders.orders_id ='".$trans_orderid[1]."'";
-						
-						// check orderinformations -> send sql query to database
-						$gambioresult = mysqli_query($dbconn, $gambiopaymentcheck);
-						
-						// check if order exists
-						if (mysqli_num_rows($gambioresult) > 0) {
-							// orderid and purpose of use match
-							$order_assignment = 1;
+						// request transaction information -> note
+						$transferdata = json_decode(apiclient($url[1].$value['transactionHash'],$curlconn),true);
+			
+						// parsing transaction information
+						if (($transferdata['data']<>'') && ($value['transferToAddress'] == $shop_wallet_address)){	
 							
-							// extract data
-							$orderdata = mysqli_fetch_assoc($gambioresult);
+							preg_match("/(\d+)/", str_replace('%20',' ',(hex2bin($transferdata['data']))) , $trans_orderid);
 							
-							// create sql query -> modify gambio db -> change orderstate to 'payment error'
-							$gambio_update_orderstate="UPDATE orders SET orders_status = 162 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
+							// check orderinformations -> create sql query
+							$gambiopaymentcheck = "SELECT orders.customers_id AS customers_id, orders.orders_id AS orders_id, orders.orders_status AS orders_status, orders_products.final_price AS final_price, currencies.title AS currencytitle, orders.currency AS currency, orders.currency_value AS currency_value FROM orders ";
+							$gambiopaymentcheck .= "INNER JOIN orders_products ON orders.orders_id = orders_products.orders_id ";
+							$gambiopaymentcheck .= "INNER JOIN currencies ON orders.currency = currencies.code WHERE orders.orders_id ='".$trans_orderid[1]."'";
 							
-							// check if the currency matches
-							if ($orderdata['currencytitle'] == $value['tokenName']){
-								// order complete
-								if ($orderdata['final_price'] == $value['amount']){
-									$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
-									$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'161',date("Y-m-d H:i:s",$value['timestamp']/1000),'Zahlung erhalten - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-									$order_state = "TRX_ORDERSTATE_2";
+							// check orderinformations -> send sql query to database
+							$gambioresult = mysqli_query($dbconn, $gambiopaymentcheck);
+							
+							// check if order exists
+							if (mysqli_num_rows($gambioresult) > 0) {
+								// order found
+								$transaction_state = 'TRX_TRANSACTIONTATE_2';
+								
+								// orderid and purpose of use match
+								$order_assignment = 1;
+								
+								// extract data
+								$orderdata = mysqli_fetch_assoc($gambioresult);
+								
+								// create sql query -> modify gambio db -> change orderstate to 'payment error'
+								$gambio_update_orderstate="UPDATE orders SET orders_status = 162 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
+								
+								// check if the currency matches
+								if ($orderdata['currencytitle'] == $value['tokenName']){
+									// order complete
+									if ($orderdata['final_price'] == $value['amount']){
+										$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
+										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'161',date("Y-m-d H:i:s",$value['timestamp']/1000),'Zahlung erhalten - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
+										$order_state = "TRX_ORDERSTATE_1";
+									}
+									// Value bill value does not match
+									else {
+										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
+										$order_state = "TRX_ORDERSTATE_2";
+									}
 								}
-								// Value bill value does not match
+								
+								// currency of the transfer is not correct
 								else {
-									$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
+									$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Coin/Token entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
 									$order_state = "TRX_ORDERSTATE_3";
 								}
-							}
-							
-							// currency of the transfer is not correct
+														
+								// check if ordersync option true
+								if (getdbparameter('ordersync') == '1'){						
+									// send status to database
+									dbquery($dbconn, $gambio_update_orderstate);
+									
+									// set orderhistory
+									if(mysqli_affected_rows($dbconn)){
+										dbquery($dbconn, $gambio_update_history);
+									}
+								}
+								
+								// check if the wallet address should be learned
+								if (getdbparameter('walletuserassociation')=='1'){
+														
+									// generate query
+									$query="SELECT COUNT(*) AS count FROM customers_memo WHERE ((customers_id = '".$orderdata['customers_id']."') AND (memo_title = 'TRON Wallet Address') AND (memo_text='".$value['transferFromAddress']."'))";
+									
+									// check if order exists
+									if (mysqli_fetch_assoc(mysqli_query($dbconn, $query))['count']=='0'){								
+										dbquery($dbconn,"INSERT INTO customers_memo(customers_id,memo_date,memo_title,memo_text) VALUES ('".$orderdata['customers_id']."','".date("d.m.Y",time())."','TRON Wallet Address','".$value['transferFromAddress']."')");
+									}
+								}
+								
+								// write orderdata into the db
+								if ((dbquerycount($dbconn,"SELECT COUNT(*) AS count FROM trx_order WHERE orderid = '".$trans_orderid[1]."'")=='0') && ($trans_orderid[1]<>'')) {	
+									// write values into table				
+									$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
+									$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
+									dbquery($dbconn,$dbquery);		
+								}
+								
+							} 
 							else {
-								$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Coin/Token entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
-								$order_state = "TRX_ORDERSTATE_4";
-							}
-													
-							// check if ordersync option true
-							if (getdbparameter('ordersync') == '1'){						
-								// send status to database
-								dbquery($dbconn, $gambio_update_orderstate);
-								
-								// set orderhistory
-								if(mysqli_affected_rows($dbconn)){
-									dbquery($dbconn, $gambio_update_history);
-								}
-							}
+								// reset order id
+								$transaction_state = 'TRX_TRANSACTIONTATE_3';	
+								$trans_orderid[1] = '';
+							}		
 							
-							// check if the wallet address should be learned
-							if (getdbparameter('walletuserassociation')=='1'){
-													
-								// generate query
-								$query="SELECT COUNT(*) AS count FROM customers_memo WHERE ((customers_id = '".$orderdata['customers_id']."') AND (memo_title = 'TRON Wallet Address') AND (memo_text='".$value['transferFromAddress']."'))";
-								
-								// check if order exists
-								if (mysqli_fetch_assoc(mysqli_query($dbconn, $query))['count']=='0'){								
-									dbquery($dbconn,"INSERT INTO customers_memo(customers_id,memo_date,memo_title,memo_text) VALUES ('".$orderdata['customers_id']."','".date("d.m.Y",time())."','TRON Wallet Address','".$value['transferFromAddress']."')");
-								}
-							}
 						} 
 						else {
-							// reset order id
+							if (($transferdata['data']=='') && ($value['transferToAddress'] == $shop_wallet_address)){
+								$transaction_state = 'TRX_TRANSACTIONTATE_4';	
+							}
+							// set orderstate
 							$trans_orderid[1] = '';
-							$orderdata['currencytitle'] = '';
-							$orderdata['final_price'] = '';
-						}					
-					} 
-					else {
-						// set orderstate
-						$order_state = 'Verwendungszweck fehlt';
-						$orderdata['currencytitle'] = '';
-						$orderdata['final_price'] = '';
-					}
-
-				// write orderdata into the db
-				if (dbquerycount($dbconn,"SELECT COUNT(*) AS count FROM trx_order WHERE orderid = '".$trans_orderid[1]."'")=='0') {	
-					// write values into table				
-					$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
-					$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
-					dbquery($dbconn,$dbquery);		
-				}
+						}						
 					
-				// write transactiondata into the db
-				$dbquery  = "INSERT INTO trx_transaction ( transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
-				$dbquery .= "VALUES ('".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
-
-					// check if data was written successfully
-					if (mysqli_query($dbconn, $dbquery)) {$synceddata++;}
-					else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}
+						// write transactiondata into the db
+						$dbquery  = "INSERT INTO trx_transaction ( transactionstate,transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
+						$dbquery .= "VALUES ('".$transaction_state."','".$value['transactionHash']."','".$value['block']."','".$value['timestamp']."','".$value['transferFromAddress']."','".$value['transferToAddress']."','".$trans_amount."','".$value['tokenName']."','".$transferdata['data']."','".$order_assignment."','".$trans_orderid[1]."')";
+						
+						// check if data was written successfully
+						if (mysqli_query($dbconn, $dbquery)) {$synceddata++;}
+						else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}
+					}
+					else {$procstop=1;}
 				}
-				else {$procstop=1;}
+				// set last sync value
+				setdbparameter('synctime',date("d.m.Y H:i:s",time()));
+				setdbparameter('syncdatacount',strval($synceddata));
 			}
-			// set last sync value
-			setdbparameter('synctime',date("d.m.Y H:i:s",time()));
-			setdbparameter('syncdatacount',$synceddata);
-		}
-		while(((count($jresponse['data']))>0)&&($procstop==0)); 
+			while(((count($jresponse['data']))>0)&&($procstop==0)); 
 	}
 
 
@@ -308,15 +312,15 @@
 	function blockchain_gen_transtbl($dbconn,$column){
 		echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
 				<tbody>
-					<tr class="dataTableHeadingRow gx-container">';				  
+					<tr>';				  
 		foreach ($column as $columndata) {
-				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title']).'</td>';
+				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
 		};
 		echo'</tr>';
 		// generate table query
-		$dbquery = "SELECT trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
-		$dbquery .= "INNER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
-		
+		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
+		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
+
 		$result = dbquery($dbconn, $dbquery);
 		if (mysqli_num_rows($result) > 0) {
 			while($value = mysqli_fetch_assoc($result)) {
@@ -324,7 +328,8 @@
 					else {
 					  // format orderprice
 					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES');} else {$trnscnf=fieldvalue('GLOBAL_NO');};
+					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES','language');} else {$trnscnf=fieldvalue('GLOBAL_NO','language');};
+					  if ($value['orderstatus']<>''){ $status=fieldvalue($value['orderstatus'],'language'); $label=fieldvalue($value['orderstatus'],'label');} else { $status=fieldvalue($value['transactionstate'],'language'); $label=fieldvalue($value['transactionstate'],'label');}
 					  // generate row data
 					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
@@ -337,7 +342,7 @@
 					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td class="dataTableContent">'.fieldvalue($value['orderstatus']).'</td>';
+					  echo '<td class="dataTableContent"><span class="label '.$label.'">'.$status.'</span></td>';
 					  echo '</tr>';
 					}
 				}
