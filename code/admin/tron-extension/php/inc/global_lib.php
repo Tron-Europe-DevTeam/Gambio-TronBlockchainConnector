@@ -308,7 +308,7 @@
 	function blockchain_gen_transtbl($dbconn,$column){
 		echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
 				<tbody>
-					<tr class="dataTableHeadingRow gx-container">';				  
+					<tr>';				  
 		foreach ($column as $columndata) {
 				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
 		};
