@@ -293,6 +293,7 @@
 							
 						} 
 						else {
+							// set transactionstate 
 							if (($transferdata['data']=='') && ($value['transferToAddress'] == $shop_wallet_address)){
 								$transaction_state = 'TRX_TRANSACTIONTATE_4';	
 							}
@@ -321,15 +322,16 @@
 		echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
 				<tbody>
 					<tr>';				  
-		foreach ($column as $columndata) {
-				echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
-		};
+					foreach ($column as $columndata) {
+						echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
+					};
 		echo'</tr>';
 		// generate table query
 		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
 		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
 
 		$result = dbquery($dbconn, $dbquery);
+		// generate table data
 		if (mysqli_num_rows($result) > 0) {
 			while($value = mysqli_fetch_assoc($result)) {
 					if ((getdbparameter('tblonlytransnote')=='1') && ($value['data']=='')){} 
