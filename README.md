@@ -43,7 +43,7 @@ CREATE TABLE trx_transaction(
     data varchar(100),
     transactionstate varchar(100),
     orderassignment varchar(100),
-	orderid varchar(100),
+    orderid varchar(100),
     PRIMARY KEY (pkid)
 ); 
 
@@ -73,6 +73,8 @@ INSERT INTO trx_systemsetup (parameter,value) VALUES ('ordersync','');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('walletuserassociation','');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('syncdatacount','');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('tblonlytransnote','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('assignmentbyordernumber','');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('assignmentbybillnumber','');
 ```
 4. create a user user and assign rights
 ```

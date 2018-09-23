@@ -231,12 +231,11 @@
 								
 								// create sql query -> modify gambio db -> change orderstate to 'payment error'
 								$gambio_update_orderstate="UPDATE orders SET orders_status = 162 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
-								
 								// check if the currency matches
-								if ($orderdata['currencytitle'] == $value['tokenName']){
+								if ($orderdata['currencytitle'] == $value['tokenName']){ 
 									// order complete
-									if ($orderdata['final_price'] == $value['amount']){
-										$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE orders_status='1' AND orders_id='".$trans_orderid[1]."'";
+									if ($orderdata['final_price'] == $trans_amount){
+										$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE ((orders_status='1' OR orders_status='162')  AND (orders_id='".$trans_orderid[1]."'))";
 										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'161',date("Y-m-d H:i:s",$value['timestamp']/1000),'Zahlung erhalten - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
 										$order_state = "TRX_ORDERSTATE_1";
 									}
@@ -244,6 +243,7 @@
 									else {
 										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
 										$order_state = "TRX_ORDERSTATE_2";
+										$transaction_state = "TRX_ORDERSTATE_2";
 									}
 								}
 								
@@ -251,6 +251,7 @@
 								else {
 									$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid[1],'162',date("Y-m-d H:i:s",$value['timestamp']/1000),'Coin/Token entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
 									$order_state = "TRX_ORDERSTATE_3";
+									$transaction_state = "TRX_ORDERSTATE_3";
 								}
 														
 								// check if ordersync option true
@@ -282,6 +283,10 @@
 									$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
 									$dbquery .= "VALUES ('".$trans_orderid[1]."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
 									dbquery($dbconn,$dbquery);		
+								}
+								else if ($order_state <> 'TRX_ORDERSTATE_1'){
+									$dbquery  = "UPDATE trx_order SET orderstatus='".$order_state."' WHERE orderid = '".$trans_orderid[1];
+									dbquery($dbconn,$dbquery);									
 								}
 								
 							} 
@@ -339,7 +344,7 @@
 					  // format orderprice
 					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
 					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES','language');} else {$trnscnf=fieldvalue('GLOBAL_NO','language');};
-					  if ($value['orderstatus']<>''){ $status=fieldvalue($value['orderstatus'],'language'); $label=fieldvalue($value['orderstatus'],'label');} else { $status=fieldvalue($value['transactionstate'],'language'); $label=fieldvalue($value['transactionstate'],'label');}
+					  //if ($value['orderstatus']<>''){ $status=fieldvalue($value['orderstatus'],'language'); $label=fieldvalue($value['orderstatus'],'label');} else { $status=fieldvalue($value['transactionstate'],'language'); $label=fieldvalue($value['transactionstate'],'label');}
 					  // generate row data
 					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
@@ -349,10 +354,11 @@
 					  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
 					  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
 					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
+					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
 					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td class="dataTableContent"><span class="label '.$label.'">'.$status.'</span></td>';
+					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
 					  echo '</tr>';
 					}
 				}

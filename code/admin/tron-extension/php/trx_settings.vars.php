@@ -79,6 +79,18 @@
 							"value" => getdbparameter('walletuserassociation'),
 							"type"  => "switch",
 							"id"    => "walletuserassociation"
+					),
+					"2" => array (
+							"name"  => "ASSIGNMENT_BY_ORDERNUMBER", 	
+							"value" => getdbparameter('assignmentbyordernumber'),
+							"type"  => "switch",
+							"id"    => "assignmentbyordernumber"
+					),
+					"3" => array (
+							"name"  => "ASSIGNMENT_BY_BILLNUMBER", 	
+							"value" => getdbparameter('assignmentbybillnumber'),
+							"type"  => "switch",
+							"id"    => "assignmentbybillnumber"
 					)
 				)
 			)
