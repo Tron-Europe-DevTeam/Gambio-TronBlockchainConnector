@@ -83,14 +83,26 @@
 					"2" => array (
 							"name"  => "ASSIGNMENT_BY_ORDERNUMBER", 	
 							"value" => getdbparameter('assignmentbyordernumber'),
-							"type"  => "switch",
+							"type"  => "switch_disabled",
 							"id"    => "assignmentbyordernumber"
 					),
 					"3" => array (
+							"name"  => "REGEX_ORDERID", 	
+							"value" => getdbparameter('ordernumberregex'),
+							"type"  => "edit",
+							"id"    => "ordernumberregex"
+					),
+					"4" => array (
 							"name"  => "ASSIGNMENT_BY_BILLNUMBER", 	
 							"value" => getdbparameter('assignmentbybillnumber'),
 							"type"  => "switch",
 							"id"    => "assignmentbybillnumber"
+					),
+					"5" => array (
+							"name"  => "REGEX_BILLID", 	
+							"value" => getdbparameter('billnumberregex'),
+							"type"  => "edit",
+							"id"    => "billnumberregex"
 					)
 				)
 			)

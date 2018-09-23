@@ -44,10 +44,19 @@
 			if (isset($_GET['ordersync'])) setdbparameter('ordersync', '1'); else setdbparameter('ordersync', '0'); 
 			
 			// display transactions with purpose only
-			if (isset($_GET['tblonlytransnote'])) setdbparameter('tblonlytransnote', $_GET['tblonlytransnote']); else setdbparameter('tblonlytransnote', '0'); 
+			if (isset($_GET['tblonlytransnote'])) setdbparameter('tblonlytransnote', '1'); else setdbparameter('tblonlytransnote', '0'); 
 			
 			// tron wallet shop address
 			if (isset($_GET['shopaddress'])) setdbparameter('shopaddress', $_GET['shopaddress']); else setdbparameter('shopaddress', ''); 
+			
+			// regex for ordernumber
+			if (isset($_GET['ordernumberregex'])) setdbparameter('ordernumberregex', $_GET['ordernumberregex']); else setdbparameter('ordernumberregex', '\d+'); 
+			
+			// assignment by bill number
+			if (isset($_GET['assignmentbybillnumber'])) setdbparameter('assignmentbybillnumber', '1'); else setdbparameter('assignmentbybillnumber', '0'); 
+			
+			// regex for bill number
+			if (isset($_GET['billnumberregex'])) setdbparameter('billnumberregex', $_GET['billnumberregex']); else setdbparameter('billnumberregex', 'R\_\d+\_\d+'); 
 		}
 
 		// menue informations

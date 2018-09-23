@@ -105,10 +105,28 @@
 					"label" => ""
 				)
 			),
+		"REGEX_ORDERID" => array (
+			"language" => array (
+				"german" => "Regex Bestellnummer",
+				"english" => "Regex Order number"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"REGEX_BILLID" => array (
+			"language" => array (
+				"german" => "Regex Rechnungsnummer",
+				"english" => "Regex Bill number"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
 		"ASSIGNMENT_BY_ORDERNUMBER" => array (
 			"language" => array (
-				"german" => "Bestellzuweisung per Bestellnummer",
-				"english" => "Order assignment via ordernumber"
+				"german" => "Bestellzuweisung per Bestellnummer (default on)",
+				"english" => "Order assignment via ordernumber (default on)"
 				),
 			"data" => array (
 					"label" => ""
