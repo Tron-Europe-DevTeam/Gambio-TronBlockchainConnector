@@ -36,8 +36,8 @@
 							   <table class="gx-configuration">
 								   <tbody>
 									  <tr><th colspan="2" class="dataTableHeadingContent_gm"></tr>
-									  <tr><td>Software Version</td><td>0.1-16092018</td></tr>	
-									  <tr><td>Releasedate</td><td>16.09.2018</td></tr>
+									  <tr><td>Software Version</td><td>0.1-24092018</td></tr>	
+									  <tr><td>Releasedate</td><td>24.09.2018</td></tr>
 									  <tr><td>Report an Issue</td><td><a href="https://github.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/issues/new" target="_blank" rel="noopener">Github Issue</a></td></tr>
 									  <tr><td>Website</td><td><a href="https://tron-europe.org" target="_blank" rel="noopener">tron-europe.org</a></td></tr>
 								   </tbody>

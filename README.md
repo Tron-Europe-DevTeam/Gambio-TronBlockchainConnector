@@ -75,8 +75,8 @@ INSERT INTO trx_systemsetup (parameter,value) VALUES ('syncdatacount','');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('tblonlytransnote','');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('assignmentbyordernumber','1');
 INSERT INTO trx_systemsetup (parameter,value) VALUES ('assignmentbybillnumber','');
-INSERT INTO trx_systemsetup (parameter,value) VALUES ('ordernumberregex','\\d+');
-INSERT INTO trx_systemsetup (parameter,value) VALUES ('billnumberregex','R\_\d+\_\d+');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('ordernumberregex','\\d{4,}');
+INSERT INTO trx_systemsetup (parameter,value) VALUES ('billnumberregex','R\_\\d+\_\\d+');
 ```
 4. create a user user and assign rights
 ```
