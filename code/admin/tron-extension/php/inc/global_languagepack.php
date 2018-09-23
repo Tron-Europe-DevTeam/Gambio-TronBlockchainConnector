@@ -105,6 +105,42 @@
 					"label" => ""
 				)
 			),
+		"REGEX_ORDERID" => array (
+			"language" => array (
+				"german" => "Regex Bestellnummer",
+				"english" => "Regex Order number"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"REGEX_BILLID" => array (
+			"language" => array (
+				"german" => "Regex Rechnungsnummer",
+				"english" => "Regex Bill number"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"ASSIGNMENT_BY_ORDERNUMBER" => array (
+			"language" => array (
+				"german" => "Bestellzuweisung per Bestellnummer (default on)",
+				"english" => "Order assignment via ordernumber (default on)"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"ASSIGNMENT_BY_BILLNUMBER" => array (
+			"language" => array (
+				"german" => "Bestellzuweisung per Rechnungsnummer",
+				"english" => "Order assignment via invoice number"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
 		"ORDER_ASSIGNMENT" => array (
 			"language" => array (
 				"german" => "Automatische Bestellzuweisung",
@@ -213,6 +249,15 @@
 					"label" => ""
 				)
 			),
+		"TBL_TITLE_TRANSFERSTATUS" => array (
+			"language" => array (
+				"german" => "Transferstatus",
+				"english" => "Transferstate"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
 		"TBL_TITLE_CURRENCY" => array (
 			"language" => array (
 				"german" => "Währung",
@@ -309,7 +354,7 @@
 					"english" => "Order assigned"
 					),
 			"data" => array (
-					"label" => "label-processing"
+					"label" => "label-success"
 				)
 			),
 		"TRX_TRANSACTIONTATE_3" => array (
@@ -318,7 +363,7 @@
 					"english" => "No Order found"
 					),
 			"data" => array (
-					"label" => "label-processing"
+					"label" => "label-error"
 				)
 			),
 		"TRX_TRANSACTIONTATE_4" => array (

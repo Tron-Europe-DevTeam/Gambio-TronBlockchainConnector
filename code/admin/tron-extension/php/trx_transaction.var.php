@@ -52,18 +52,22 @@
 				"width" => "120px"
 				),
 		"7" => array (
-				"title" => "TBL_TITLE_ORDERASSIGNMENT",
+				"title" => "TBL_TITLE_TRANSFERSTATUS",
 				"width" => "40px"
 				),
 		"8" => array (
-				"title" => "TBL_TITLE_ORDERNUMBER",
+				"title" => "TBL_TITLE_ORDERASSIGNMENT",
 				"width" => "40px"
 				),
 		"9" => array (
+				"title" => "TBL_TITLE_ORDERNUMBER",
+				"width" => "40px"
+				),
+		"10" => array (
 				"title" => "TBL_TITLE_TOTAL_AMOUNT",
 				"width" => "80px"
 				),
-		"10" => array (
+		"11" => array (
 				"title" => "TBL_TITLE_STATUS",
 				"width" => "40px"
 				)
