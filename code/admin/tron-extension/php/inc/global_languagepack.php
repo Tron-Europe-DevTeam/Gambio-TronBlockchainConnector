@@ -374,6 +374,15 @@
 			"data" => array (
 					"label" => "label-processing"
 				)
+			),
+		"TRX_TRANSACTIONTATE_5" => array (
+			"language" => array (
+				"german" => "Teilüberweisung",
+				"english" => "Partial transfer"
+				),
+			"data" => array (
+					"label" => "label-processing"
+				)
 			)
 	);
 
