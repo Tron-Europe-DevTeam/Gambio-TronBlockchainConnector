@@ -294,7 +294,7 @@
 										$order_state = "TRX_ORDERSTATE_1";										
 									}
 									
-									// Value bill value does not match
+									// bill value does not match
 									else {
 										$gambio_update_history = set_dbquery_gambio_orderhistory($trans_orderid,'162', date("Y-m-d H:i:s",$value['timestamp']/1000), 'Betrag entspricht nicht der Rechnung - '.$trans_amount.' '.$trans_currency.' Transaktion-Hash: '.$value['transactionHash']);
 										$order_state = "TRX_ORDERSTATE_2";
