@@ -71,9 +71,10 @@
 	}
 
 	// dbquery function
-	function dbquery ($conn,$query) {
+	function dbquery ($query) {
+		global $dbconn;
 		// send query
-		return mysqli_query($conn, $query);
+		return mysqli_query($dbconn, $query);
 	}
 
 	// dbquery count function
@@ -133,7 +134,7 @@
 	  // return hlink
 	  return '<a href="https://tronscan.org/#/'.$url.'/'.$hash.'" target="_blank" rel="noopener">'.$hash.'</a>';
 	}
-
+	
 	// function to generate an hyperlink (gambio)
 	function hyperlink_gambio_ordersummary ($orderid) {
 	  // return hlink
@@ -169,7 +170,7 @@
 		$tabledata = '';
 		// create value
 		foreach ($topic as $value) {
-			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26" align="bottom">'.fieldvalue($value['title'],'language').'</th></tr>';
+			$tabledata .= '<tr><th colspan="2" class="dataTableHeadingContent_gm"><img align="middle" src="./tron-extension/img/tron_icon.png" width="26" height="26">'.fieldvalue($value['title'],'language').'</th></tr>';
 			foreach ($value['data'] as $data) {
 				// input field									 
 				if ($data['type'] == 'edit') {
@@ -241,9 +242,10 @@
 					unset($trans_amount);
 					
 					// check last hashvalue
-					$result = dbquery($dbconn, "SELECT transactionHash FROM trx_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
+					$result = dbquery("SELECT transactionHash FROM trx_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC" );
 					
 					if (mysqli_num_rows($result) == 0){
+						
 						// extract currency name
 						$trans_currency = $value['tokenName'];	
 						
@@ -304,7 +306,7 @@
 									// partial transfer check
 									if (calc_summary_amounts ($dbconn,$shop_wallet_address,$trans_orderid,$orderdata['currencytitle'])['count']>0){
 										$dbquery  = "UPDATE trx_transaction SET transactionstate='TRX_TRANSACTIONTATE_5' WHERE orderid = '".$trans_orderid."' AND transactionstate = 'TRX_ORDERSTATE_2'";
-										dbquery($dbconn,$dbquery);
+										dbquery($dbquery);
 										$transaction_state = "TRX_TRANSACTIONTATE_5";
 									}
 									
@@ -320,11 +322,12 @@
 								// check if ordersync option true
 								if (getdbparameter('ordersync') == '1'){						
 									// send status to database
-									dbquery($dbconn, $gambio_update_orderstate);
+									dbquery($gambio_update_orderstate);
 									
 									// set orderhistory
 									if(mysqli_affected_rows($dbconn)){
-										dbquery($dbconn, $gambio_update_history);
+										echo $gambio_update_history;
+										dbquery($gambio_update_history);
 									}
 								}
 								
@@ -336,7 +339,7 @@
 									
 									// check if order exists
 									if (mysqli_fetch_assoc(mysqli_query($dbconn, $query))['count']=='0'){								
-										dbquery($dbconn,"INSERT INTO customers_memo(customers_id,memo_date,memo_title,memo_text) VALUES ('".$orderdata['customers_id']."','".date("d.m.Y",time())."','TRON Wallet Address','".$value['transferFromAddress']."')");
+										dbquery("INSERT INTO customers_memo(customers_id,memo_date,memo_title,memo_text) VALUES ('".$orderdata['customers_id']."','".date("d.m.Y",time())."','TRON Wallet Address','".$value['transferFromAddress']."')");
 									}
 								}
 								
@@ -345,13 +348,13 @@
 									// write values into table				
 									$dbquery  = "INSERT INTO trx_order ( orderid,orderprice,currency,orderstatus ) ";
 									$dbquery .= "VALUES ('".$trans_orderid."','".$orderdata['final_price']."','".$orderdata['currencytitle']."','".$order_state."')";
-									dbquery($dbconn,$dbquery);		
+									dbquery($dbquery);		
 								}
 								
 								// update orderstatus
 								else if ((get_order_status ($dbconn,$trans_orderid) <> 'TRX_ORDERSTATE_1') AND (get_order_status ($dbconn,$trans_orderid) <> $trans_orderid)){
 									$dbquery  = "UPDATE trx_order SET orderstatus='".$order_state."' WHERE orderid = '".$trans_orderid."'";
-									dbquery($dbconn,$dbquery);									
+									dbquery($dbquery);									
 								}
 	
 							} 
@@ -400,7 +403,7 @@
 		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
 		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
 
-		$result = dbquery($dbconn, $dbquery);
+		$result = dbquery($dbquery);
 		// generate table data
 		if (mysqli_num_rows($result) > 0) {
 			while($value = mysqli_fetch_assoc($result)) {
@@ -408,18 +411,15 @@
 					else {
 					  // format orderprice
 					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-					  if ($value['orderassignment']=='1'){$trnscnf=fieldvalue('GLOBAL_YES','language');} else {$trnscnf=fieldvalue('GLOBAL_NO','language');};
 					  // generate row data
 					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
-					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['block'],'block').'</td>';
 					  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
 					  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
 					  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
 					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
-					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
-					  echo '<td class="dataTableContent">'.$trnscnf.'</td>';
+					  echo '<td onclick="order_assignment(\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
 					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
@@ -428,6 +428,65 @@
 				}
 			}	
 	  echo '</tbody></table></br>';
+	  
+	  echo'
+	  <div id="trx-modal" class="trx-modal"></div>
+	  
+	  <script>		
+        function ordersearch(action,value) {
+		 if(event.keyCode == 13)
+			{
+			if (value == "") {
+				document.getElementById("trx-orderform").innerHTML = "<option value=\"-1\">No Data</option>";
+				return;
+			} else {
+				if (window.XMLHttpRequest) {
+					xmlhttp = new XMLHttpRequest();
+				} else {
+					xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						    document.getElementById("trx-orderform").innerHTML = this.responseText;
+						}															
+					}
+				};
+				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action ,true);
+				xmlhttp.send();
+			}	
+		}				  
+	  
+		function order_assignment(hash,language,orderid) {
+			if (hash == "") {
+				document.getElementById("txtHint").innerHTML = "";
+				return;
+			} else {
+				if (window.XMLHttpRequest) {
+					xmlhttp = new XMLHttpRequest();
+				} else {
+					xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						    document.getElementById("trx-modal").innerHTML = this.responseText;
+							var modal = document.getElementById("trx-modal");
+							modal.style.display = "block";	
+							var span = document.getElementsByClassName("trx-close")[0];
+							span.onclick = function() {
+								modal.style.display = "none";
+							}
+							window.onclick = function(event) {
+								if (event.target == modal) {
+									modal.style.display = "none";
+								}
+							}
+						}															
+					}
+				};
+				xmlhttp.open("GET","tron-extension/php/inc/modal_order_assignment.php?hash=" + hash + "&language=" + language + "&orderid=" + orderid ,true);
+				xmlhttp.send();
+		}	
+		</script>';
 	}
 
 	function system_gen_syncbutton ($url,$title,$infotext){
