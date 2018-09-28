@@ -22,22 +22,110 @@
    --------------------------------------------------------------*/
 <style>
 		
-		.label-success {
-			color: #FFF !important;
-			background-color: #45a845 !important;
-			background-image: none;
-		}
+	/* label (success) */	
+	.label-success {
+		color: #FFF !important;
+		background-color: #45a845 !important;
+		background-image: none;
+	}
+	
+	/* label (error) */
+	.label-error {
+		color: #FFF !important;
+		background-color: #e0412c !important;
+		background-image: none;
+	}
+	
+	/* label (processing) */
+	.label-processing {
+		color: #333 !important;
+		background-color: #f5ae49 !important;
+		background-image: none;
+	}
+	
+	/* td table */
+	.td-global{
+		height: 25px;
+	}
+
+	/* td title */
+	.td-title{
+		width: 200px
+	}
 		
-		.label-error {
-			color: #FFF !important;
-			background-color: #e0412c !important;
-			background-image: none;
-		}
-		
-		.label-processing {
-			color: #333 !important;
-			background-color: #f5ae49 !important;
-			background-image: none;
-		}
+	 /* trx modal background */
+	.trx-modal {
+		display: none;
+		position: fixed; 
+		z-index: 1; 
+		padding-top: 100px; 
+		left: 0;
+		top: 0;
+		width: 100%; 
+		height: 100%; 
+		overflow: auto; 
+		background-color: rgb(0,0,0); 
+		background-color: rgba(0,0,0,0.4); 
+	}
+	
+	/* trx modal header content */
+	.trx-modal-header {
+		font-size: 12px;
+		font-weight: bold;
+		background-color: #ebebeb;
+		margin: auto;
+		padding: 20px;
+		width: 700px;	
+		height: 45px;
+		padding: 12px 24px;
+		border-bottom-color: currentcolor;
+		border-bottom-style: none;
+		border-bottom-width: medium;
+		border-bottom: 1px solid #e7e7e7;
+	}
+	
+	/* trx modal main content */
+	.trx-modal-content{
+		background-color: #ffffff;
+		margin: auto;
+		padding: 20px;
+		width: 700px;	
+		padding: 12px 24px;
+		border-bottom-color: currentcolor;
+		border-bottom-style: none;
+		border-bottom-width: medium;
+		border-bottom: 1px solid #e7e7e7;
+	}
+	
+	/* trx modal transaction content */
+	.content-transaction{	
+		height: 230px;
+	}
+	
+	/* trx modal order content */
+	.content-order{	
+		height: 120px;
+	}
+	
+	/* trx modal order content */
+	.content-order-useraction{	
+		height: 80px;
+	}
+
+	/* trx close */
+	.trx-close {
+		float: right;
+		color: #aaaaaa;
+		font-size: 15px;
+		font-weight: bold;
+	}
+	
+	/* trx close action */
+	.trx-close:hover,
+	.trx-close:focus {
+		color: #000;
+		text-decoration: none;
+		cursor: pointer;
+	}
 		
 </style>
