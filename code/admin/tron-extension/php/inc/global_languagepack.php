@@ -87,6 +87,15 @@
 					"label" => ""
 				)
 			),	
+		"SYNC_DURATION" => array (
+			"language" => array (
+				"german" => "Synchronisationszeit (in Sekunden)",
+				"english" => "Synchronization time (in seconds)"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),	
 		"BACKEND_SETTINGS" => array (
 			"language" => array (
 				"german" => "Backend Einstellungen",

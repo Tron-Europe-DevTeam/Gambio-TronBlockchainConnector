@@ -55,13 +55,18 @@
 							"value" => getdbparameter('synctime'),
 							"type"  => "edit_disabled",
 							"id"    => "synctime"
-					),
-					
+					),					
 					"1" => array (
 							"name"  => "SYNC_TRANSACTIONS", 	
 							"value" => getdbparameter('syncdatacount'),
 							"type"  => "edit_disabled",
 							"id"    => "syncdatacount"
+					),					
+					"2" => array (
+							"name"  => "SYNC_DURATION", 	
+							"value" => getdbparameter('syncduration'),
+							"type"  => "edit_disabled",
+							"id"    => "syncduration"
 					)
 				)
 			),
