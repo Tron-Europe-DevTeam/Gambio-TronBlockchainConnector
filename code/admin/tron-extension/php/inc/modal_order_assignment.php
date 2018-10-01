@@ -85,7 +85,7 @@
 		  </div>
 		  <div class="trx-modal-content content-order-useraction">
 			  <table>
-			      <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" onkeypress="ordersearch(\'search\',this.value)"></td></tr>
+			      <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" onkeypress="ordersearch(\'search\',this.value,\'trx-orderform\')"></td></tr>
 				  <tr><td class="td-global td-title">'.fieldvalue('MANUAL_ORDERASSIGNMENT','language',$language).'</td>
 					  <td class="dataTableContent_gm">
 							<select id="trx-orderform" class="form-control"><option value="-1">No Data</option></select>
@@ -95,7 +95,7 @@
 		  </div>
 		  <div class="trx-modal-header">
 			<table>
-			<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'save\',this.value)" class="btn btn-primary save btn-data">Order zuweisen</button></td></tr>
+			<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\')" class="btn btn-primary save btn-data">Order zuweisen</button></td></tr>
 			</table>
 		  </div>';
 	}

@@ -39,26 +39,40 @@
 	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {
+		
+		// action -> search	
+		if ($action == 'search'){
+			// generate sql query
+			$dbquery = "SELECT orders_id FROM orders WHERE orders_id like '%".$data."%' LIMIT 10";
 			
-		/*if ($action == 'search') 
-		{*/
-				// generate sql query
-				$dbquery = "SELECT orders_id FROM orders WHERE orders_id like '%".$data."%' LIMIT 10";
+			// send db query
+			$result=dbquery($dbquery);
+			
+			// check db result
+			if (mysqli_num_rows($result) > 0) {
 				
-				// send db query
-				$result=dbquery($dbquery);
+				// generate option values
+				while($data = mysqli_fetch_assoc($result)) {
+					echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].'</option>';
+				}			
+			}
+			// error message
+			else echo $default_error;
+		}
+		// action -> change
+		else if ($action == 'change'){
+			if ($data<>'-1'){
+			   
+			    echo '<option value="'.$data['orders_id'].'">'.$data.'</option>';
+			   
+				$gambio_order_data = mysqli_fetch_assoc(dbquery(system_gen_gambio_orderquery($data,''));
 				
-				// check db result
-				if (mysqli_num_rows($result) > 0) {
-					
-					// generate option values
-					while($data = mysqli_fetch_assoc($result)) {
-						echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].'</option>';
-					}			
-				}
-				// error message
-				else echo $default_error;
-		//}
+				//tokenName,amount,timestamp,transactionHash,transferFromAddress
+				
+				
+				//order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);				
+			}
+		}
 		
 	}	
 	// error message

@@ -346,6 +346,8 @@
 			}	
 	}
 
+	
+	
 function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data){			
 	
 	// create sql query -> modify gambio db -> change orderstate to 'payment error'
@@ -465,11 +467,11 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 	  <div id="trx-modal" class="trx-modal"></div>
 	  
 	  <script>		
-        function ordersearch(action,value) {
-		 if(event.keyCode == 13)
+        function ordersearch(action,value,divobject) {
+		 if ((event.keyCode == 13)||(event.type == "click"))
 			{
 			if (value == "") {
-				document.getElementById("trx-orderform").innerHTML = "<option value=\"-1\">No Data</option>";
+				document.getElementById(divobject).innerHTML = "<option value=\"-1\">No Data</option>";
 				return;
 			} else {
 				if (window.XMLHttpRequest) {
@@ -479,10 +481,14 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 				}
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
-						    document.getElementById("trx-orderform").innerHTML = this.responseText;
+						    document.getElementById(divobject).innerHTML = this.responseText;
 						}															
 					}
 				};
+				if (action == "change"){
+					value = document.getElementById("trx-orderform").value;	
+				}				
+				
 				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action ,true);
 				xmlhttp.send();
 			}	
