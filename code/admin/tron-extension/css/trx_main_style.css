@@ -101,6 +101,16 @@
 	.content-transaction{	
 		height: 230px;
 	}
+
+	/* trx modal transaction summary */
+	.content-transaction-summary{	
+		height: 95px;
+	}
+	
+	/* trx modal token summary */
+	.content-token-summary{	
+		height: 10px;
+	}
 	
 	/* trx modal order content */
 	.content-order{	

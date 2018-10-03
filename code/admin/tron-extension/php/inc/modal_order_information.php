@@ -117,15 +117,25 @@
 			
 			echo system_gen_modal_header ('Transactionsummary',false);
 			
+			unset($token);
 			// collect sql db data
 			while($data = mysqli_fetch_assoc($result)) {
-				echo '<div class="trx-modal-content content-order"><table>
-					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TIMESTAMP','language',$language).'</td><td class="td-global">'.date("d.m.Y H:i:s",$data['timestamp']/1000).'</td></tr>
-					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TRANSACTION_HASH','language',$language).'</td><td class="td-global">'.hyperlink_tronscan_hash($data['transactionHash'],'transaction').'</td></tr>
-					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_QUANTITY','language',$language).'</td><td class="td-global">'.$data['amount'].' '.$data['tokenName'].'</td></tr>
-					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TRANSFERSTATUS','language',$language).'</td><td class="td-global"><span class="label '.fieldvalue($data['transactionstate'],'label').'">'.fieldvalue($data['transactionstate'],'language',$language).'</span></td>
+				echo '<div class="trx-modal-content content-transaction-summary"><table>
+					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TIMESTAMP','language',$language).'</td><td class="td-global" colspan="2">'.date("d.m.Y H:i:s",$data['timestamp']/1000).'</td></tr>
+					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TRANSACTION_HASH','language',$language).'</td><td class="td-global" colspan="2">'.hyperlink_tronscan_hash($data['transactionHash'],'transaction').'</td></tr>
+					  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_QUANTITY','language',$language).'</td><td class="td-global td-title">'.$data['amount'].' '.$data['tokenName'].'</td><td class="td-global"><span class="label '.fieldvalue($data['transactionstate'],'label').'">'.fieldvalue($data['transactionstate'],'language',$language).'</span></td></tr>
 					  </table></div>';
-				}	
+				$tokensummary[$data['tokenName']]['amount']=$tokensummary[$data['tokenName']]['amount']+$data['amount'];	  
+				}
+				
+			echo system_gen_modal_header ('Summary'.$token['TRX']['amount'],false);		
+			
+			foreach ($tokensummary as $token => $value) {
+				echo '<div class="trx-modal-content content-token-summary"><table>';
+				echo '<tr><td>'.$value['amount'].' '.$token.'</td></tr>';
+				echo '</table></div>';
+				
+			}
 		}
 	}	
 
