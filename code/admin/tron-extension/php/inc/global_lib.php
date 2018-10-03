@@ -453,10 +453,10 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 					  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
 					  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
 					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
-					  echo '<td onclick="order_assignment(\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
+					  echo '<td onclick="order_information(\'order-assignment\',\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
 					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
+					  echo '<td onclick="order_information(\'order-information\',\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
 					  echo '</tr>';
 					}
 				}
@@ -494,9 +494,9 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 			}	
 		}				  
 	  
-		function order_assignment(hash,language,orderid) {
+		function order_information(action,hash,language,orderid) {
 			if (hash == "") {
-				document.getElementById("txtHint").innerHTML = "";
+				document.getElementById("trx-modal").innerHTML = "";
 				return;
 			} else {
 				if (window.XMLHttpRequest) {
@@ -521,13 +521,26 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 						}															
 					}
 				};
-				xmlhttp.open("GET","tron-extension/php/inc/modal_order_assignment.php?hash=" + hash + "&language=" + language + "&orderid=" + orderid ,true);
+				xmlhttp.open("GET","tron-extension/php/inc/modal_order_information.php?action=" + action + "&hash=" + hash + "&language=" + language + "&orderid=" + orderid ,true);
 				xmlhttp.send();
 		}	
 		</script>';
 	}
-
-	function system_gen_syncbutton ($url,$title,$infotext){
+	
+	// function to generate modal header
+	function system_gen_modal_header ($title,$span) {
+	  if ($span == true) {
+		  $spandata = '<span class="trx-close">&times;</span>';
+	  }		
+	  else $spandata='';
+	  return '<div class="trx-modal-header">
+				'.$spandata.'
+				<p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26">'.$title.'</p>
+			  </div>';
+	}
+	
+	// function to generate syncbutton
+	function system_gen_syncbutton ($url,$title,$infotext) {
 	  $button = '<div class="files-not-uploaded" style="word-wrap: break-word; margin-bottom: 30px">';
 	  $button .=  '<button class="btn btn-default btn-lg" type="button" onclick="location.replace(\''.$url.'\')">'.$title.'</button>   '.$infotext.'</div>';
 	  // return button
