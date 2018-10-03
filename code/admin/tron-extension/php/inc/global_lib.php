@@ -426,18 +426,57 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 	
 	// function blockchainsync
 	function blockchain_gen_transtbl ($dbconn,$column){
-		echo '<table class="gx-compatibility-table" cellspacing="0" cellpadding="0" border="0">
-				<tbody>
-					<tr>';				  
-					foreach ($column as $columndata) {
-						echo '<td class="dataTableHeadingContent" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
-					};
-		echo'</tr>';
+		
 		// generate table query
 		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
-		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC";
+		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC LIMIT 20";
 
 		$result = dbquery($dbquery);
+		
+
+		echo '<table class="table table-main table-striped table-row-large dataTable no-footer" cellspacing="0" cellpadding="0" border="0">
+				<tbody>
+					<div class="page-navigation form-inline">
+						<div class="form-group pull-right">
+								<label class="control-label">1 bis 11 (von 11)</label>
+								<button class="btn btn-default previous" disabled="">
+									<span class="glyphicon glyphicon-chevron-left"></span>
+								</button>		
+								<button class="btn btn-default next" disabled="">
+									<span class="glyphicon glyphicon-chevron-right"></span>
+								</button>
+						</div>
+					</div>
+					<tr>';				  
+					foreach ($column as $columndata) {
+						echo '<td class="tbl-header" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
+					};
+		echo'</tr>';
+
+		echo '	<tr role="row" class="filter">
+					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="number form-control" type="text">
+					</th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="customer form-control" type="text">
+					</th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="customer form-control" type="text">
+					</th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="customer form-control" type="text">
+					</th>
+					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="customer form-control" type="text">
+					</th>
+					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
+					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
+							<input class="customer form-control" type="text">
+					</th>		
+				</tr>';
+				
 		// generate table data
 		if (mysqli_num_rows($result) > 0) {
 			while($value = mysqli_fetch_assoc($result)) {
@@ -450,8 +489,7 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 					  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
 					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
-					  echo '<td class="dataTableContent">'.$value['amount'].'</td>';
-					  echo '<td class="dataTableContent">'.$value['tokenName'].'</td>';
+					  echo '<td class="dataTableContent">'.$value['amount'].' '.$value['tokenName'].'</td>';
 					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
 					  echo '<td onclick="order_information(\'order-assignment\',\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
 					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';

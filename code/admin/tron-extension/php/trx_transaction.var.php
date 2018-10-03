@@ -37,30 +37,26 @@
 				"width" => "120px"
 				),
 		"3" => array (
-				"title" => "TBL_TITLE_QUANTITY",
-				"width" => "30px"
-				),
-		"4" => array (
 				"title" => "TBL_TITLE_CURRENCY",
 				"width" => "60px"
 				),
-		"5" => array (
+		"4" => array (
 				"title" => "TBL_TITLE_PURPOSE_OF_USE",
 				"width" => "50px"
 				),
-		"6" => array (
+		"5" => array (
 				"title" => "TBL_TITLE_TRANSFERSTATUS",
 				"width" => "40px"
 				),
-		"7" => array (
+		"6" => array (
 				"title" => "TBL_TITLE_ORDERNUMBER",
 				"width" => "40px"
 				),
-		"8" => array (
+		"7" => array (
 				"title" => "TBL_TITLE_TOTAL_AMOUNT",
 				"width" => "80px"
 				),
-		"9" => array (
+		"8" => array (
 				"title" => "TBL_TITLE_STATUS",
 				"width" => "40px"
 				)

@@ -43,6 +43,16 @@
 		background-image: none;
 	}
 	
+	/* table header */
+	.tbl-header {
+		color: #fff;
+		background: #2196f3 !important;
+		text-decoration: none !important;
+		text-transform: none;
+		font-family: Roboto,"Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+		font-size: 12px;
+	}
+	
 	/* td table */
 	.td-global{
 		height: 25px;
@@ -109,7 +119,7 @@
 	
 	/* trx modal token summary */
 	.content-token-summary{	
-		height: 10px;
+		height: 40px;
 	}
 	
 	/* trx modal order content */
