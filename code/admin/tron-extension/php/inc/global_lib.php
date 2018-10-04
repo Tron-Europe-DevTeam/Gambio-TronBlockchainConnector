@@ -423,19 +423,42 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 	// return transactiondata
 	return $db_transaction_data;
 }
-	
-	// function blockchainsync
-	function blockchain_gen_transtbl ($dbconn,$column){
-		
+
+function gen_transtbl_values($language,$hash,$sender,$order){
+
 		// generate table query
 		$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
-		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' ORDER BY block DESC LIMIT 20";
-
+		$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' AND transactionHash like '%".$hash."%' AND transferFromAddress like '%".$sender."%' AND trx_transaction.orderid like '%".$order."%' ORDER BY block DESC LIMIT 20";
 		$result = dbquery($dbquery);
 		
-
+		
+		// generate table data
+		if (mysqli_num_rows($result) > 0) {
+			while($value = mysqli_fetch_assoc($result)) {
+					if ((getdbparameter('tblonlytransnote')=='1') && ($value['data']=='')){} 
+					else {
+					  // format orderprice
+					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
+					  // generate row data
+					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
+					  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
+					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
+					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
+					  echo '<td class="dataTableContent">'.$value['amount'].' '.$value['tokenName'].'</td>';
+					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
+					  echo '<td onclick="order_information(\'order-assignment\',\''.$value['transactionHash'].'\',\''.$language.'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label',$language).'">'.fieldvalue($value['transactionstate'],'language',$language).'</span></td>';
+					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
+					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
+					  echo '<td onclick="order_information(\'order-information\',\''.$value['transactionHash'].'\',\''.$language.'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label',$language).'">'.fieldvalue($value['orderstatus'],'language',$language).'</span></td>';
+					  echo '</tr>';
+					}
+				}
+			}
+}			
+	
+	// function blockchainsync
+	function blockchain_gen_transtbl ($dbconn,$column,$address){				
 		echo '<table class="table table-main table-striped table-row-large dataTable no-footer" cellspacing="0" cellpadding="0" border="0">
-				<tbody>
 					<div class="page-navigation form-inline">
 						<div class="form-group pull-right">
 								<label class="control-label">1 bis 11 (von 11)</label>
@@ -456,10 +479,10 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 		echo '	<tr role="row" class="filter">
 					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
-							<input class="number form-control" type="text">
+							<input class="number form-control" id="trns-hash" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
 					</th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
-							<input class="customer form-control" type="text">
+							<input class="number form-control" id="trns-sender" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
 					</th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
 							<input class="customer form-control" type="text">
@@ -469,36 +492,16 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 					</th>
 					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
-							<input class="customer form-control" type="text">
+							<input class="number form-control" id="trns-order" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
 					</th>
 					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
 							<input class="customer form-control" type="text">
 					</th>		
 				</tr>';
-				
-		// generate table data
-		if (mysqli_num_rows($result) > 0) {
-			while($value = mysqli_fetch_assoc($result)) {
-					if ((getdbparameter('tblonlytransnote')=='1') && ($value['data']=='')){} 
-					else {
-					  // format orderprice
-					  if ($value['orderprice']<>''){$orderprice=round($value['orderprice'],2).' '.$value['currency'];}else{$orderprice='';};
-					  // generate row data
-					  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
-					  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
-					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
-					  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
-					  echo '<td class="dataTableContent">'.$value['amount'].' '.$value['tokenName'].'</td>';
-					  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
-					  echo '<td onclick="order_information(\'order-assignment\',\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['transactionstate'],'label').'">'.fieldvalue($value['transactionstate'],'language').'</span></td>';
-					  echo '<td class="dataTableContent">'.hyperlink_gambio_ordersummary($value['orderid']).'</td>';
-					  echo '<td class="dataTableContent">'.$orderprice.'</td>';
-					  echo '<td onclick="order_information(\'order-information\',\''.$value['transactionHash'].'\',\''.$_SESSION['language'].'\',\''.$value['orderid'].'\')" class="dataTableContent"><span class="label '.fieldvalue($value['orderstatus'],'label').'">'.fieldvalue($value['orderstatus'],'language').'</span></td>';
-					  echo '</tr>';
-					}
-				}
-			}	
+	  echo '<tbody id="transaction-data">';	
+	  gen_transtbl_values($_SESSION['language'],'','','');
+			
 	  echo '</tbody></table></br>';
 	  
 	  echo'
@@ -562,6 +565,29 @@ function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wa
 				xmlhttp.open("GET","tron-extension/php/inc/modal_order_information.php?action=" + action + "&hash=" + hash + "&language=" + language + "&orderid=" + orderid ,true);
 				xmlhttp.send();
 		}	
+		
+		function tbl_search(event,language) {
+			if (event.keyCode == 13){
+				
+			    var hash = document.getElementById("trns-hash").value;
+				var order = document.getElementById("trns-order").value;
+				var sender = document.getElementById("trns-sender").value;
+				
+				if (window.XMLHttpRequest) {
+					xmlhttp = new XMLHttpRequest();
+				} else {
+					xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				xmlhttp.onreadystatechange = function() {
+					if (this.readyState == 4 && this.status == 200) {
+						    document.getElementById("transaction-data").innerHTML = this.responseText;
+						}															
+					}		
+				xmlhttp.open("GET","tron-extension/php/inc/transaction_search.php?hash=" + hash + "&language=" + language + "&order=" + order + "&sender=" + sender,true);
+				xmlhttp.send();	
+			}
+		}	
+		
 		</script>';
 	}
 	
