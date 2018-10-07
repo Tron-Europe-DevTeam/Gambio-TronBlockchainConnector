@@ -428,6 +428,15 @@
 			"data" => array (
 					"label" => "label-processing"
 				)
+			),
+		"TRX_TRANSACTIONTATE_6" => array (
+			"language" => array (
+				"german" => "Manuell entfernt",
+				"english" => "removed by user"
+				),
+			"data" => array (
+					"label" => "label-processing"
+				)
 			)
 	);
 

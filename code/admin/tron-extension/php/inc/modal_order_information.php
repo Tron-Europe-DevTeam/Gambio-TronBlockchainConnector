@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: modal_order_assignment.php 
+   Filename: modal_order_information.php 
    
    15.09.2018 - Init Version
    
@@ -38,8 +38,11 @@
 	// extract action
 	$action = $_GET['action'];
 	
-		//create dbconnection
+	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
+	
+	// btn remove
+	$btn_remove = '';
 	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {
@@ -81,7 +84,9 @@
 							  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TOTAL_AMOUNT','language',$language).'</td><td class="td-global">'.$orderprice.'</td></tr>
 							  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_STATUS','language',$language).'</td><td class="td-global"><span class="label '.fieldvalue($data['orderstatus'],'label').'">'.fieldvalue($data['orderstatus'],'language',$language).'</span></td></tr>
 						  </table>
-					  </div>';};
+					  </div>';
+					  $btn_remove = '<button type="button" onclick="ordersearch(\'remove\',\''.$data['orderid'].'\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">remove order</button>';
+					  };  
 			echo system_gen_modal_header ('Order Assignment',false);
 			echo '<div class="trx-modal-content content-order-useraction">
 					  <table>
@@ -95,7 +100,10 @@
 				  </div>
 				  <div class="trx-modal-header">
 					<table>
-					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">Order assign</button></td></tr>
+					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td>
+						<td>
+						<button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">Order assign</button>'.$btn_remove.'						
+					</td></tr>
 					</table>
 				  </div>';
 		}

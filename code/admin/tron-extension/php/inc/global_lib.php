@@ -85,9 +85,8 @@
 	
 	// function to calculation of the deposited amounts
 	function calc_summary_amounts ($conn,$walletaddress,$orderid,$tokenname) {	
-		// send query as result
+     	// send query as result
 		return mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(amount) AS sum, COUNT(orderid) AS count FROM trx_transaction WHERE transferToAddress='".$walletaddress."' AND orderid='".$orderid."' AND tokenName='".$tokenname."'"));
-	echo "<option>SELECT SUM(amount) AS sum, COUNT(orderid) AS count FROM trx_transaction WHERE transferToAddress='".$walletaddress."' AND orderid='".$orderid."' AND tokenName='".$tokenname."'</option>";
 	}	
 	
 	// function to get orderstatus
@@ -354,17 +353,16 @@
 	}
 	
 	function order_assignment_update($dbconn,$orderid,$shop_wallet_address) {
+		
 		$data = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT orderid,orderprice,currency FROM trx_order WHERE orderid='".$orderid."'"));
 		
-		echo '<option>'."SELECT orderid,orderprice,currency FROM trx_order WHERE orderid='".$orderid."'".'</option>';
-		echo '<option>'.calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currencytitle'])['sum'].'</option>';
-		echo '<option>'.$data['orderprice'].'</option>';
+		$amount = calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currency'])['sum'];
 		
-		if ($data['orderprice']<calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currencytitle'])['sum']){
+		if (($data['orderprice'] > $amount) || ($amount == '')){
+			if ($orderid<>''){
 			$dbquery  = "UPDATE trx_order SET orderstatus='TRX_ORDERSTATE_2' WHERE orderid = '".$orderid."'";
-			
-			echo '<option>'.$dbquery.')</option>';
 			dbquery($dbquery);	
+			}
 		}
 	}		
 	
@@ -558,7 +556,7 @@
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						    document.getElementById(divobject).innerHTML = this.responseText;
-							if (action == "change"){
+							if (action != "search"){
 								location.reload();
 							}
 						}															

@@ -40,6 +40,9 @@
 	// generate default error
 	$default_error = '<option value="-1">No Data</option>';
 	
+	// fetch shop address
+	$shop_wallet_address = getdbparameter('shopaddress');
+	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {
 		
@@ -65,9 +68,7 @@
 		// action -> change
 		else if ($action == 'change'){
 			if ($orderid<>'-1'){
-				
-				$shop_wallet_address = getdbparameter('shopaddress');
-			   
+							   
 				// set transactionstate -> Order assigned
 				$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
 				
@@ -103,12 +104,20 @@
 				mysqli_query($dbconn, $dbquery);
 				
 				order_assignment_update($dbconn,$old_orderid,$shop_wallet_address);
-				echo '<option value="'.$data['orders_id'].'">'.$dbquery.')</option>';
 				}
 			}
-			
+		}	
 		// action -> remove
 		else if ($action == 'remove'){
+			
+			// generate sql query
+			$dbquery = "UPDATE trx_transaction SET orderassignment = '0', transactionstate = 'TRX_TRANSACTIONTATE_6', orderid = '' WHERE transactionHash = '".$hash."'";
+
+			// update transaction state
+			mysqli_query($dbconn, $dbquery);
+			
+			// update order status
+			order_assignment_update($dbconn,$orderid,$shop_wallet_address);
 
 		}
 		
