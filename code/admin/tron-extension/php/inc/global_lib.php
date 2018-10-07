@@ -451,7 +451,7 @@
 						  // generate row data
 						  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 						  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
-						  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
+						  echo '<td class="dataTableContent" id="transhash">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
 						  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
 						  echo '<td class="dataTableContent">'.$value['amount'].' '.$value['tokenName'].'</td>';
 						  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
@@ -549,9 +549,10 @@
 				};
 				if (action == "change"){
 					value = document.getElementById("trx-orderform").value;	
+					hash = document.getElementById("transhash").value;	
 				}				
-				
-				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action ,true);
+								
+				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action + "&hash=" + hash ,true);
 				xmlhttp.send();
 			}	
 		}				  

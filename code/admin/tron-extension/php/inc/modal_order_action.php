@@ -25,11 +25,14 @@
 	include 'global_lib.php';
 	include 'global_settings.php';
 	
-    // extract transaction hash
-	$data=$_GET['data'];
+    // extract orderid
+	$orderid = $_GET['data'];
 	
     // extract transaction hash
-	$action=$_GET['action'];
+	$action = $_GET['action'];
+	
+	// extract transaction hash
+	$hash = $_GET['hash'];
 
 	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
@@ -43,7 +46,7 @@
 		// action -> search	
 		if ($action == 'search'){
 			// generate sql query
-			$dbquery = "SELECT orders_id FROM orders WHERE orders_id like '%".$data."%' LIMIT 10";
+			$dbquery = "SELECT orders_id FROM orders WHERE orders_id like '%".$orderid."%' LIMIT 10";
 			
 			// send db query
 			$result=dbquery($dbquery);
@@ -61,24 +64,39 @@
 		}
 		// action -> change
 		else if ($action == 'change'){
-			if ($data<>'-1'){
+			if ($orderid<>'-1'){
 				
 				
-			    echo '<option>test '.$data.'</option>';
+			    echo '<option>test '.$orderid.'</option>';
 			   
 				// set transactionstate -> Order assigned
 				$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
 				
 				// orderid and purpose of use match
-				$db_transaction_data['order_assignment'] = 1;
+				$db_transaction_data['order_assignment'] = 0;
 				
 				// set orderid 
-				$db_transaction_data['trans_orderid'] = $data;
+				$db_transaction_data['trans_orderid'] = $orderid;
+				
+				// check orderinformations -> send sql query to database
+				$gambio_order_check = mysqli_query($dbconn, system_gen_gambio_orderquery($db_transaction_data['trans_orderid'],''));
+
+				$gambio_transaction_check = mysqli_query($dbconn, "select * from trx_transaction where transactionHash = '".$hash."'");
+
+				// check if order exists
+				if ((mysqli_num_rows($gambio_order_check) > 0) && (mysqli_num_rows($gambio_transaction_check) > 0)) {
+			
+				// extract gambio data
+				$gambio_order_data = mysqli_fetch_assoc($gambio_order_check);
+				
+				// extract transaction data
+				$transaction_entry = mysqli_fetch_assoc($gambio_transaction_check);
 				
 				// update orderstate
-				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data);	
+				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);	
 				
 				echo '<option>test '.var_dump($db_transaction_data).'</option>';
+				}
 			}
 		}
 		
