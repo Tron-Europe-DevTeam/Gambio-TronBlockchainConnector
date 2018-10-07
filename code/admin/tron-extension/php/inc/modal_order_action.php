@@ -62,19 +62,25 @@
 		// action -> change
 		else if ($action == 'change'){
 			if ($data<>'-1'){
+				
+				
+			    echo '<option>test '.$data.'</option>';
 			   
-			    echo '<option value="'.$data['orders_id'].'">'.$data.'</option>';
-			   
-				$gambio_order_data = mysqli_fetch_assoc(dbquery(system_gen_gambio_orderquery($data,''));
+				// set transactionstate -> Order assigned
+				$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
 				
-				//tokenName,amount,timestamp,transactionHash,transferFromAddress
+				// orderid and purpose of use match
+				$db_transaction_data['order_assignment'] = 1;
 				
+				// set orderid 
+				$db_transaction_data['trans_orderid'] = $data;
 				
-				//order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);				
+				// update orderstate
+				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data);	
+				
+				echo '<option>test '.var_dump($db_transaction_data).'</option>';
 			}
 		}
 		
 	}	
-	// error message
-	else echo $default_error;	
 ?>
