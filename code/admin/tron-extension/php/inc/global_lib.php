@@ -87,6 +87,7 @@
 	function calc_summary_amounts ($conn,$walletaddress,$orderid,$tokenname) {	
 		// send query as result
 		return mysqli_fetch_assoc(mysqli_query($conn, "SELECT SUM(amount) AS sum, COUNT(orderid) AS count FROM trx_transaction WHERE transferToAddress='".$walletaddress."' AND orderid='".$orderid."' AND tokenName='".$tokenname."'"));
+	echo "<option>SELECT SUM(amount) AS sum, COUNT(orderid) AS count FROM trx_transaction WHERE transferToAddress='".$walletaddress."' AND orderid='".$orderid."' AND tokenName='".$tokenname."'</option>";
 	}	
 	
 	// function to get orderstatus
@@ -352,14 +353,22 @@
 			}
 	}
 	
-	function order_check($orderid)
-	{
-		"select orderid,orderprice,currency from trx_order";
+	function order_assignment_update($dbconn,$orderid,$shop_wallet_address) {
+		$data = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT orderid,orderprice,currency FROM trx_order WHERE orderid='".$orderid."'"));
+		
+		echo '<option>'."SELECT orderid,orderprice,currency FROM trx_order WHERE orderid='".$orderid."'".'</option>';
+		echo '<option>'.calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currencytitle'])['sum'].'</option>';
+		echo '<option>'.$data['orderprice'].'</option>';
+		
+		if ($data['orderprice']<calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currencytitle'])['sum']){
+			$dbquery  = "UPDATE trx_order SET orderstatus='TRX_ORDERSTATE_2' WHERE orderid = '".$orderid."'";
+			
+			echo '<option>'.$dbquery.')</option>';
+			dbquery($dbquery);	
+		}
 	}		
-
 	
-	
-	function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data){			
+	function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data) {			
 		
 		// create sql query -> modify gambio db -> change orderstate to 'payment error'
 		$gambio_update_orderstate="UPDATE orders SET orders_status = 162 WHERE orders_status='1' AND orders_id='".$gambio_order_data['orders_id']."'";
@@ -549,6 +558,9 @@
 				xmlhttp.onreadystatechange = function() {
 					if (this.readyState == 4 && this.status == 200) {
 						    document.getElementById(divobject).innerHTML = this.responseText;
+							if (action == "change"){
+								location.reload();
+							}
 						}															
 					}
 				};

@@ -65,6 +65,8 @@
 		// action -> change
 		else if ($action == 'change'){
 			if ($orderid<>'-1'){
+				
+				$shop_wallet_address = getdbparameter('shopaddress');
 			   
 				// set transactionstate -> Order assigned
 				$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
@@ -79,7 +81,7 @@
 				$gambio_order_check = mysqli_query($dbconn, system_gen_gambio_orderquery($db_transaction_data['trans_orderid'],''));
 
 				$transaction_check = mysqli_query($dbconn, "select * from trx_transaction where transactionHash = '".$hash."'");
-
+				
 				// check if order exists
 				if ((mysqli_num_rows($gambio_order_check) > 0) && (mysqli_num_rows($transaction_check) > 0)) {
 			
@@ -89,16 +91,25 @@
 				// extract transaction data
 				$transaction_entry = mysqli_fetch_assoc($transaction_check);
 				
+				$old_orderid = $transaction_entry['orderid'];
+				
 				// update orderstate
-				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);	
+				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data);	
 				
 				// generate sql query
-				$dbquery = "UPDATE trx_transaction SET transactionstate = '".$db_transaction_data['transaction_state']."', orderid = '".$db_transaction_data['trans_orderid']."' WHERE transactionHash = '".$hash."'";
+				$dbquery = "UPDATE trx_transaction SET orderassignment = '0', transactionstate = '".$db_transaction_data['transaction_state']."', orderid = '".$db_transaction_data['trans_orderid']."' WHERE transactionHash = '".$hash."'";
 				
 				// update transaction state
-				mysqli_query($dbconn, $dbquery);				
+				mysqli_query($dbconn, $dbquery);
+				
+				order_assignment_update($dbconn,$old_orderid,$shop_wallet_address);
+				echo '<option value="'.$data['orders_id'].'">'.$dbquery.')</option>';
 				}
 			}
+			
+		// action -> remove
+		else if ($action == 'remove'){
+
 		}
 		
 	}	
