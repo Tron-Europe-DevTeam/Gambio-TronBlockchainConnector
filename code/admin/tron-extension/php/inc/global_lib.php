@@ -445,7 +445,7 @@
 	}
 	
 	// function table generation
-	function gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose){
+	function gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose,$currency){
 			// orderstatus filter - no assignment
 			if ($ordstatus=='TRX_ORDERSTATE_4'){$orderfilter="AND orderstatus IS NULL";}
 			// orderstatus filter
@@ -454,7 +454,7 @@
 			
 			// generate table query
 			$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
-			$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' AND transactionHash like '%".$hash."%' AND trx_transaction.data like '%".bin2hex($purpose)."%' AND transferFromAddress like '%".$sender."%' AND trx_transaction.orderid like '%".$order."%' AND trx_transaction.transactionstate like '%".$trstatus."%' ".$orderfilter." ORDER BY block DESC LIMIT 100";
+			$dbquery .= "LEFT OUTER JOIN trx_order ON  trx_order.orderid = trx_transaction.orderid WHERE transferToAddress = '".getdbparameter('shopaddress')."' AND tokenName like '%".$currency."%' AND transactionHash like '%".$hash."%' AND trx_transaction.data like '%".bin2hex($purpose)."%' AND transferFromAddress like '%".$sender."%' AND trx_transaction.orderid like '%".$order."%' AND trx_transaction.transactionstate like '%".$trstatus."%' ".$orderfilter." ORDER BY block DESC LIMIT 100";
 			$result = dbquery($dbquery);
 
 			// generate table data
@@ -501,7 +501,6 @@
 						echo '<td class="tbl-header" style="width: '.$columndata['width'].'px">'.fieldvalue($columndata['title'],'language').'</td>';
 					};
 		echo'</tr>';
-
 		echo '	<tr role="row" class="filter">
 					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
@@ -510,7 +509,9 @@
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
 							<input class="number form-control" id="trns-sender" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
 					</th>
-					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;"></th>
+					<th style="width: 26px; max-width: 50px; min-width: 50px; background: #d7ecfd;">
+							<input class="number form-control" id="trns-currency" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
+					</th>					
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
 							<input class="customer form-control" id="trns-purpose" onkeypress="tbl_search(event,\''.$_SESSION['language'].'\')" type="text">
 					</th>
@@ -522,7 +523,8 @@
 							<option value="TRX_TRANSACTIONTATE_3">'.fieldvalue('TRX_TRANSACTIONTATE_3','language').'</option>
 							<option value="TRX_TRANSACTIONTATE_4">'.fieldvalue('TRX_TRANSACTIONTATE_4','language').'</option>
 							<option value="TRX_ORDERSTATE_3">'.fieldvalue('TRX_ORDERSTATE_3','language').'</option>
-							<option value="TRX_TRANSACTIONTATE_5">'.fieldvalue('TRX_TRANSACTIONTATE_5','language').'</option>							
+							<option value="TRX_TRANSACTIONTATE_5">'.fieldvalue('TRX_TRANSACTIONTATE_5','language').'</option>	
+							<option value="TRX_TRANSACTIONTATE_6">'.fieldvalue('TRX_TRANSACTIONTATE_6','language').'</option>								
 						</select>
 					</th>					
 					<th style="width: 166px; max-width: 190px; min-width: 190px; background: #d7ecfd;">
@@ -540,7 +542,7 @@
 					</th>			
 				</tr>
 	  <tbody id="transaction-data">';	
-	  gen_transtbl_values($_SESSION['language'],'','','','','','');	
+	  gen_transtbl_values($_SESSION['language'],'','','','','','','');	
 	  echo '</tbody></table></br>
 	  <div id="trx-modal" class="trx-modal"></div>
 	  
@@ -615,6 +617,7 @@
 				var trstatus = document.getElementById("trns-status").value;
 				var ordstatus = document.getElementById("order-status").value;	
 				var purpose = document.getElementById("trns-purpose").value;
+				var currency = document.getElementById("trns-currency").value;
 				if (window.XMLHttpRequest) {
 					xmlhttp = new XMLHttpRequest();
 				} else {
@@ -625,7 +628,7 @@
 						    document.getElementById("transaction-data").innerHTML = this.responseText;
 						}															
 					}		
-				xmlhttp.open("GET","tron-extension/php/inc/transaction_search.php?hash=" + hash + "&language=" + language + "&order=" + order + "&sender=" + sender + "&trstatus=" + trstatus + "&ordstatus=" + ordstatus + "&purpose=" + purpose,true);
+				xmlhttp.open("GET","tron-extension/php/inc/transaction_search.php?hash=" + hash + "&language=" + language + "&order=" + order + "&sender=" + sender + "&trstatus=" + trstatus + "&ordstatus=" + ordstatus + "&purpose=" + purpose + "&currency=" + currency,true);
 				xmlhttp.send();	
 			}
 		}	
