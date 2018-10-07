@@ -353,15 +353,18 @@
 	}
 	
 	function order_assignment_update($dbconn,$orderid,$shop_wallet_address) {
-		
+		// collect transaction data
 		$data = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT orderid,orderprice,currency FROM trx_order WHERE orderid='".$orderid."'"));
-		
 		$amount = calc_summary_amounts($dbconn,$shop_wallet_address,$orderid,$data['currency'])['sum'];
 		
+		// check currency amount
 		if (($data['orderprice'] > $amount) || ($amount == '')){
 			if ($orderid<>''){
-			$dbquery  = "UPDATE trx_order SET orderstatus='TRX_ORDERSTATE_2' WHERE orderid = '".$orderid."'";
-			dbquery($dbquery);	
+			// modify transferstatus 
+			dbquery("UPDATE trx_order SET orderstatus='TRX_ORDERSTATE_2' WHERE orderid = '".$orderid."'");	
+						
+			// modify gambio db -> change orderstate to 'payment error'
+			dbquery("UPDATE orders SET orders_status = 162 WHERE orders_id='".$orderid."'");
 			}
 		}
 	}		
@@ -446,7 +449,8 @@
 			// orderstatus filter - no assignment
 			if ($ordstatus=='TRX_ORDERSTATE_4'){$orderfilter="AND orderstatus IS NULL";}
 			// orderstatus filter
-			else if ($ordstatus<>''){$orderfilter="AND orderstatus like '".$ordstatus."%'";}	
+			else if ($ordstatus<>''){$orderfilter="AND orderstatus like '".$ordstatus."%'";}
+			else $orderfilter = '';
 			
 			// generate table query
 			$dbquery = "SELECT trx_transaction.transactionstate,trx_transaction.transactionHash,trx_transaction.block,trx_transaction.timestamp,trx_transaction.transferFromAddress,trx_transaction.transferToAddress,trx_transaction.amount,trx_transaction.tokenName,trx_transaction.data,trx_transaction.orderassignment,trx_transaction.orderid, trx_order.orderprice, trx_order.currency, trx_order.orderstatus FROM trx_transaction "; 
@@ -483,7 +487,7 @@
 		echo '<table class="table table-main table-striped table-row-large dataTable no-footer" cellspacing="0" cellpadding="0" border="0">
 					<div class="page-navigation form-inline">
 						<div class="form-group pull-right">
-								<label class="control-label">1 bis 11 (von 11)</label>
+								<label class="control-label">Dataset 1 of 1</label>
 								<button class="btn btn-default previous" disabled="">
 									<span class="glyphicon glyphicon-chevron-left"></span>
 								</button>		
@@ -541,7 +545,8 @@
 	  <div id="trx-modal" class="trx-modal"></div>
 	  
 	  <script>		
-        function ordersearch(action,value,divobject,hash) {
+	  
+        function ordersearch(event,action,value,divobject,hash) {
 		 if ((event.keyCode == 13)||(event.type == "click"))
 			{
 			if (value == "") {

@@ -21,7 +21,7 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-   
+
     // include external library
 	include 'global_lib.php';
 	include 'global_settings.php';
@@ -47,15 +47,14 @@
     // extract language
 	$language = $_GET['language'];	
 
-		//create dbconnection
+	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
 	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {		
 	
-	// generate transaction table
-	gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose);
-	
+		// generate transaction table
+		gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose);
 	}
-
+	
 ?>

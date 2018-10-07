@@ -85,12 +85,12 @@
 							  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_STATUS','language',$language).'</td><td class="td-global"><span class="label '.fieldvalue($data['orderstatus'],'label').'">'.fieldvalue($data['orderstatus'],'language',$language).'</span></td></tr>
 						  </table>
 					  </div>';
-					  $btn_remove = '<button type="button" onclick="ordersearch(\'remove\',\''.$data['orderid'].'\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">remove order</button>';
+					  $btn_remove = '<button type="button" onclick="ordersearch(event,\'remove\',\''.$data['orderid'].'\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">'.fieldvalue('BTN_REMOVE_ORDERASSIGNMENT','language',$language).'</button>';
 					  };  
 			echo system_gen_modal_header ('Order Assignment',false);
 			echo '<div class="trx-modal-content content-order-useraction">
 					  <table>
-						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" autocomplete="off" onkeypress="ordersearch(\'search\',this.value,\'trx-orderform\',\''.$data['transactionHash'].'\')"></td></tr>
+						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" autocomplete="off" onkeypress="ordersearch(event,\'search\',this.value,\'trx-orderform\',\''.$data['transactionHash'].'\')"></td></tr>
 						  <tr><td class="td-global td-title">'.fieldvalue('MANUAL_ORDERASSIGNMENT','language',$language).'</td>
 							  <td class="dataTableContent_gm">
 									<select id="trx-orderform" class="form-control"><option value="-1">No Data</option></select>
@@ -102,7 +102,7 @@
 					<table>
 					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td>
 						<td>
-						<button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">Order assign</button>'.$btn_remove.'						
+						<button type="button" onclick="ordersearch(event,\'change\',\'data\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">'.fieldvalue('BTN_ORDERASSIGNMENT','language',$language).'</button>'.$btn_remove.'						
 					</td></tr>
 					</table>
 				  </div>';
@@ -123,6 +123,7 @@
 			$dbquery = "SELECT transactionHash,timestamp,transferFromAddress,amount,tokenName,transactionstate FROM trx_transaction WHERE orderid = '".$orderid."'";
 			$result = dbquery($dbquery);
 			
+			// Tokensummary
 			echo system_gen_modal_header ('Transactionsummary',false);
 			
 			unset($token);
@@ -135,7 +136,7 @@
 					  </table></div>';
 				$tokensummary[$data['tokenName']]['amount']=$tokensummary[$data['tokenName']]['amount']+$data['amount'];	  
 				}
-				
+			// generate tokeninformation	
 			echo system_gen_modal_header ('Summary'.$token['TRX']['amount'],false);		
 			
 			foreach ($tokensummary as $token => $value) {
