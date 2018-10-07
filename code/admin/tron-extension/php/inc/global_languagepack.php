@@ -375,6 +375,15 @@
 					"label" => "label-error"
 				)
 			),
+		"TRX_ORDERSTATE_4" => array (
+			"language" => array (
+				"german" => "Keine Zuweisung",
+				"english" => "No assignment"
+				),
+			"data" => array (
+					"label" => "label-error"
+				)
+			),
 		"TRX_TRANSACTIONTATE_1" => array (
 			"language" => array (
 					"german" => "Offen",
