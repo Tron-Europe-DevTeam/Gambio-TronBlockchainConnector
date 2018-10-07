@@ -87,6 +87,15 @@
 					"label" => ""
 				)
 			),	
+		"SYNC_DURATION" => array (
+			"language" => array (
+				"german" => "Synchronisationszeit (in Sekunden)",
+				"english" => "Synchronization time (in seconds)"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),	
 		"BACKEND_SETTINGS" => array (
 			"language" => array (
 				"german" => "Backend Einstellungen",
@@ -204,6 +213,24 @@
 					"label" => ""
 				)
 			),
+		"GLOBAL_SEARCH" => array (
+			"language" => array (
+				"german" => "Suche",
+				"english" => "Search"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"MANUAL_ORDERASSIGNMENT" => array (
+			"language" => array (
+				"german" => "Bestellnummer </br>(manuelle Zuweisung)",
+				"english" => "Order number </br>(manual assignment)"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
 		"TBL_TITLE_BLOCK" => array (
 			"language" => array (
 				"german" => "Block",
@@ -235,6 +262,15 @@
 			"language" => array (
 				"german" => "Absender",
 				"english" => "Sender"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"TBL_TITLE_RECEIVER" => array (
+			"language" => array (
+				"german" => "Empfänger",
+				"english" => "Receiver"
 				),
 			"data" => array (
 					"label" => ""
@@ -339,6 +375,15 @@
 					"label" => "label-error"
 				)
 			),
+		"TRX_ORDERSTATE_4" => array (
+			"language" => array (
+				"german" => "Keine Zuweisung",
+				"english" => "No assignment"
+				),
+			"data" => array (
+					"label" => "label-error"
+				)
+			),
 		"TRX_TRANSACTIONTATE_1" => array (
 			"language" => array (
 					"german" => "Offen",
@@ -374,16 +419,33 @@
 			"data" => array (
 					"label" => "label-processing"
 				)
+			),
+		"TRX_TRANSACTIONTATE_5" => array (
+			"language" => array (
+				"german" => "Teilüberweisung",
+				"english" => "Partial transfer"
+				),
+			"data" => array (
+					"label" => "label-processing"
+				)
 			)
 	);
 
-	function fieldvalue($field,$value){
-		global $translationvar;
-		if ($value == 'language'){
-			$data = $translationvar[$field]['language'][$_SESSION['language']];
+	function fieldvalue(){
+		// incl. transvar
+		global $translationvar;	
+		// fetch parameters
+		$value = func_get_args();
+		// check attribute
+		if ($value[1] == 'language'){
+			if (func_num_args() == 2){
+				$data = $translationvar[$value[0]]['language'][$_SESSION['language']];
+			}			
+			else $data = $translationvar[$value[0]]['language'][$value[2]];
 		}
-		else $data = $translationvar[$field]['data'][$value];
+		else $data = $translationvar[$value[0]]['data'][$value[1]];
 		// return value
 		return $data;
 	}
+
 ?>

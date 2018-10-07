@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: trx_transaction.var.php 
+   Filename: transaction_search.php
    
    15.09.2018 - Init Version
    
@@ -21,45 +21,41 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-	 
-	// set table column
-	$column = array( 
-		"0" => array (
-				"title" => "TBL_TITLE_TIMESTAMP",
-				"width" => "60px"
-				),
-		"1" => array (
-				"title" => "TBL_TITLE_TRANSACTION_HASH",
-				"width" => "120px"
-				),
-		"2" => array (
-				"title" => "TBL_TITLE_SENDER",
-				"width" => "120px"
-				),
-		"3" => array (
-				"title" => "TBL_TITLE_CURRENCY",
-				"width" => "60px"
-				),
-		"4" => array (
-				"title" => "TBL_TITLE_PURPOSE_OF_USE",
-				"width" => "50px"
-				),
-		"5" => array (
-				"title" => "TBL_TITLE_TRANSFERSTATUS",
-				"width" => "40px"
-				),
-		"6" => array (
-				"title" => "TBL_TITLE_ORDERNUMBER",
-				"width" => "40px"
-				),
-		"7" => array (
-				"title" => "TBL_TITLE_TOTAL_AMOUNT",
-				"width" => "80px"
-				),
-		"8" => array (
-				"title" => "TBL_TITLE_STATUS",
-				"width" => "40px"
-				)
-	);
+   
+    // include external library
+	include 'global_lib.php';
+	include 'global_settings.php';
+   
+    // extract transaction hash
+	$hash = $_GET['hash'];
+
+	// extract sender
+	$sender = $_GET['sender'];
+	
+	// extract orderid
+	$order = $_GET['order'];
+	
+	// extract transaction status
+	$trstatus = $_GET['trstatus'];
+	
+	// extract order status
+	$ordstatus = $_GET['ordstatus'];
+	
+	// extract order status
+	$purpose = $_GET['purpose'];
+	
+    // extract language
+	$language = $_GET['language'];	
+
+		//create dbconnection
+	$dbconn = dbconnect($dbname[0]);
+	
+	// check dbconnection
+	if (dbconncheck($dbconn)) {		
+	
+	// generate transaction table
+	gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose);
+	
+	}
 
 ?>

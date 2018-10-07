@@ -56,8 +56,8 @@
 		}
 		
 		// generate transaction table
-		blockchain_gen_transtbl($dbconn,$column);
-
+		blockchain_gen_transtbl($dbconn,$column,$search);
+		
 		// generate blockchain sync button
 		echo system_gen_syncbutton('/admin/tron_wallet_transactions.php?autosync=1','Blockchain Sync','Last Sync : '.getdbparameter('syncdatacount'));
 		
