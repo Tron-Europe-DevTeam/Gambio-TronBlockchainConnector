@@ -46,7 +46,7 @@
 		// action -> search	
 		if ($action == 'search'){
 			// generate sql query
-			$dbquery = "SELECT orders_id FROM orders WHERE orders_id like '%".$orderid."%' LIMIT 10";
+			$dbquery = "SELECT orders_id,customers_name FROM orders WHERE orders_id like '%".$orderid."%' LIMIT 10";
 			
 			// send db query
 			$result=dbquery($dbquery);
@@ -56,7 +56,7 @@
 				
 				// generate option values
 				while($data = mysqli_fetch_assoc($result)) {
-					echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].'</option>';
+					echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].'('.$data['customers_name'].')</option>';
 				}			
 			}
 			// error message
@@ -65,9 +65,6 @@
 		// action -> change
 		else if ($action == 'change'){
 			if ($orderid<>'-1'){
-				
-				
-			    echo '<option>test '.$orderid.'</option>';
 			   
 				// set transactionstate -> Order assigned
 				$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
@@ -81,21 +78,24 @@
 				// check orderinformations -> send sql query to database
 				$gambio_order_check = mysqli_query($dbconn, system_gen_gambio_orderquery($db_transaction_data['trans_orderid'],''));
 
-				$gambio_transaction_check = mysqli_query($dbconn, "select * from trx_transaction where transactionHash = '".$hash."'");
+				$transaction_check = mysqli_query($dbconn, "select * from trx_transaction where transactionHash = '".$hash."'");
 
 				// check if order exists
-				if ((mysqli_num_rows($gambio_order_check) > 0) && (mysqli_num_rows($gambio_transaction_check) > 0)) {
+				if ((mysqli_num_rows($gambio_order_check) > 0) && (mysqli_num_rows($transaction_check) > 0)) {
 			
 				// extract gambio data
 				$gambio_order_data = mysqli_fetch_assoc($gambio_order_check);
 				
 				// extract transaction data
-				$transaction_entry = mysqli_fetch_assoc($gambio_transaction_check);
+				$transaction_entry = mysqli_fetch_assoc($transaction_check);
 				
 				// update orderstate
 				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);	
 				
-				echo '<option>test '.var_dump($db_transaction_data).'</option>';
+				$dbquery = "UPDATE trx_transaction SET transactionstate = '".$db_transaction_data['transaction_state']."', orderid = '".$db_transaction_data['trans_orderid']."' WHERE transactionHash = '".$hash."'";
+
+				mysqli_query($dbconn, $dbquery);
+				
 				}
 			}
 		}

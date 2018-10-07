@@ -346,9 +346,8 @@
 					$dbquery  = "INSERT INTO trx_transaction ( transactionstate,transactionHash,block,timestamp,transferFromAddress,transferToAddress,amount,tokenName,data,orderassignment,orderid ) ";
 					$dbquery .= "VALUES ('".$db_transaction_data['transaction_state']."','".$transaction_entry['transactionHash']."','".$transaction_entry['block']."','".$transaction_entry['timestamp']."','".$transaction_entry['transferFromAddress']."','".$transaction_entry['transferToAddress']."','".$transaction_entry['amount']."','".$transaction_entry['tokenName']."','".format_dbdata($transaction_entry['data'],200)."','".$db_transaction_data['order_assignment']."','".$db_transaction_data['trans_orderid']."')";
 					
-					// check if data was written successfully
-					if (mysqli_query($dbconn, $dbquery)) {$synceddata++;}
-					else { echo "Error: " . $sql . "<br>" . mysqli_error($conn);}			
+					// dbchange
+					mysqli_query($dbconn, $dbquery);	
 				}	
 			}
 	}
@@ -451,7 +450,7 @@
 						  // generate row data
 						  echo '<tr class="dataTableRowSelected visibility_switcher gx-container" style="cursor: pointer;">';
 						  echo '<td class="dataTableContent">'.date("d.m.Y H:i:s",$value['timestamp']/1000).'</td>';
-						  echo '<td class="dataTableContent" id="transhash">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
+						  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transactionHash'],'transaction').'</td>';
 						  echo '<td class="dataTableContent">'.hyperlink_tronscan_hash($value['transferFromAddress'],'address').'</td>';
 						  echo '<td class="dataTableContent">'.$value['amount'].' '.$value['tokenName'].'</td>';
 						  echo '<td class="dataTableContent">'.rawurldecode(hex2bin($value['data'])).'</td>';
@@ -529,7 +528,7 @@
 	  <div id="trx-modal" class="trx-modal"></div>
 	  
 	  <script>		
-        function ordersearch(action,value,divobject) {
+        function ordersearch(action,value,divobject,hash) {
 		 if ((event.keyCode == 13)||(event.type == "click"))
 			{
 			if (value == "") {
@@ -549,7 +548,6 @@
 				};
 				if (action == "change"){
 					value = document.getElementById("trx-orderform").value;	
-					hash = document.getElementById("transhash").value;	
 				}				
 								
 				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action + "&hash=" + hash ,true);
