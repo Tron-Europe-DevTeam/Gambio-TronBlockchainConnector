@@ -95,7 +95,7 @@
 				  </div>
 				  <div class="trx-modal-header">
 					<table>
-					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\')" class="btn btn-primary save btn-data">Order zuweisen</button></td></tr>
+					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\')" class="btn btn-primary save btn-data">Order assign</button></td></tr>
 					</table>
 				  </div>';
 		}

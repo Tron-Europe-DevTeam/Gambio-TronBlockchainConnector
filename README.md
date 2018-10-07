@@ -117,3 +117,5 @@ Release Date (full tested Version) : 30.09.2018
 ## LiveDemo
   <img width="80%" src="https://raw.githubusercontent.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/master/src/gambio01.png">
   <img width="80%" src="https://raw.githubusercontent.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/master/src/gambio02.png">
+  <img width="80%" src="https://raw.githubusercontent.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/master/src/gambio03.png">
+  <img width="80%" src="https://raw.githubusercontent.com/Tron-Europe-DevTeam/Gambio-TronBlockchainConnector/master/src/gambio04.png">
