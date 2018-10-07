@@ -85,7 +85,7 @@
 			echo system_gen_modal_header ('Order Assignment',false);
 			echo '<div class="trx-modal-content content-order-useraction">
 					  <table>
-						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" onkeypress="ordersearch(\'search\',this.value,\'trx-orderform\')"></td></tr>
+						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" autocomplete="off" onkeypress="ordersearch(\'search\',this.value,\'trx-orderform\')"></td></tr>
 						  <tr><td class="td-global td-title">'.fieldvalue('MANUAL_ORDERASSIGNMENT','language',$language).'</td>
 							  <td class="dataTableContent_gm">
 									<select id="trx-orderform" class="form-control"><option value="-1">No Data</option></select>
