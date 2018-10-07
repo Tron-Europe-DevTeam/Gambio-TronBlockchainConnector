@@ -35,8 +35,17 @@
 	// extract orderid
 	$order = $_GET['order'];
 	
+	// extract transaction status
+	$trstatus = $_GET['trstatus'];
+	
+	// extract order status
+	$ordstatus = $_GET['ordstatus'];
+	
+	// extract order status
+	$purpose = $_GET['purpose'];
+	
     // extract language
-	$language = $_GET['language'];
+	$language = $_GET['language'];	
 
 		//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
@@ -45,7 +54,7 @@
 	if (dbconncheck($dbconn)) {		
 	
 	// generate transaction table
-	gen_transtbl_values($language,$hash,$sender,$order);
+	gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose);
 	
 	}
 
