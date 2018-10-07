@@ -56,7 +56,7 @@
 				
 				// generate option values
 				while($data = mysqli_fetch_assoc($result)) {
-					echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].'('.$data['customers_name'].')</option>';
+					echo '<option value="'.$data['orders_id'].'">'.$data['orders_id'].' ('.$data['customers_name'].')</option>';
 				}			
 			}
 			// error message
@@ -92,10 +92,11 @@
 				// update orderstate
 				$db_transaction_data = order_assignment($gambio_order_data,$transaction_entry,$dbconn,getdbparameter('shopaddress'),$db_transaction_data);	
 				
+				// generate sql query
 				$dbquery = "UPDATE trx_transaction SET transactionstate = '".$db_transaction_data['transaction_state']."', orderid = '".$db_transaction_data['trans_orderid']."' WHERE transactionHash = '".$hash."'";
-
-				mysqli_query($dbconn, $dbquery);
 				
+				// update transaction state
+				mysqli_query($dbconn, $dbquery);				
 				}
 			}
 		}

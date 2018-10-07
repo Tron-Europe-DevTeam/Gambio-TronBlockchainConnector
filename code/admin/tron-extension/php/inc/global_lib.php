@@ -352,6 +352,13 @@
 			}
 	}
 	
+	function order_check($orderid)
+	{
+		"select orderid,orderprice,currency from trx_order";
+	}		
+
+	
+	
 	function order_assignment($gambio_order_data,$transaction_entry,$dbconn,$shop_wallet_address,$db_transaction_data){			
 		
 		// create sql query -> modify gambio db -> change orderstate to 'payment error'
@@ -379,8 +386,7 @@
 				$dbquery  = "UPDATE trx_transaction SET transactionstate='TRX_TRANSACTIONTATE_5' WHERE orderid = '".$gambio_order_data['orders_id']."' AND transactionstate = 'TRX_ORDERSTATE_2'";
 				dbquery($dbquery);
 				$db_transaction_data['transaction_state'] = "TRX_TRANSACTIONTATE_5";
-			}
-			
+			}			
 		}
 		
 		// currency of the transfer is not correct
