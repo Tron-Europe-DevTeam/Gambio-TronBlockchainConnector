@@ -49,7 +49,7 @@ require('includes/application_top.php');
 					</table>
 				</td>					
 				<!-- body_text //-->
-					<?php require('tron-extension/php/trx_swinfo.php'); ?>
+					<?php require('trx_swinfo.php'); ?>
 				<!-- body_text_eof //-->
 			</tr>
 		</table>
