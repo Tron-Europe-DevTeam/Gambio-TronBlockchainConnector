@@ -21,18 +21,20 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+   
     // include external library
-	include 'global_lib.php';
-	include 'global_settings.php';
+	include 'tron-extension/php/inc/global_lib.php';
+	include 'tron-extension/php/inc/global_settings.php';
+	require_once('includes/application_top.php');
 	
     // extract orderid
-	$orderid = $_GET['data'];
+	$orderid = $_POST['data'];
 	
     // extract transaction hash
-	$action = $_GET['action'];
+	$action = $_POST['action'];
 	
 	// extract transaction hash
-	$hash = $_GET['hash'];
+	$hash = $_POST['hash'];
 
 	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);

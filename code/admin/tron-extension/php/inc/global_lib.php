@@ -173,6 +173,7 @@
 		$sqlquery  = "SELECT orders.gm_orders_code AS gm_orders_code, orders.customers_id AS customers_id, orders.orders_id AS orders_id, orders.orders_status AS orders_status, orders_products.final_price AS final_price, currencies.title AS currencytitle, orders.currency AS currency, orders.currency_value AS currency_value FROM orders ";
 		$sqlquery .= "INNER JOIN orders_products ON orders.orders_id = orders_products.orders_id ";
 		$sqlquery .= "INNER JOIN currencies ON orders.currency = currencies.code WHERE orders.orders_id ='".$orderid."'";	
+				
 		// check invoice number value
 		if ((getdbparameter('assignmentbybillnumber')=='1') && ($billid<>'')){
 			$sqlquery .= " OR orders.gm_orders_code ='".$billid."'";
@@ -250,6 +251,7 @@
 			$jresponse = json_decode(apiclient(system_gen_tsurl('hash',$shop_wallet_address,$page),$curlconn),true);
 			$page = $page + 100;
 			foreach ($jresponse['data'] as $value) {
+
 					// check last hashvalue
 					if (dbquerycount($dbconn,"SELECT COUNT(transactionHash) as count FROM trx_transaction WHERE transactionHash = '".$value['transactionHash']."' ORDER BY pkid DESC") == '0'){	
 							// exceed transaction to array 			
@@ -304,16 +306,18 @@
 						
 						// parsing bill number
 						$db_transaction_data['trans_billid'] = system_parsing(getdbparameter('billnumberregex'), rawurldecode(hex2bin(format_dbdata($transaction_entry['data'],200))));
-					
+					     
+						echo  $db_transaction_data['trans_orderid'].'</br>';
+						echo  $db_transaction_data['trans_billid'].'</br>';
 						// check orderinformations -> send sql query to database
 						$gambio_order_check = mysqli_query($dbconn, system_gen_gambio_orderquery($db_transaction_data['trans_orderid'],$db_transaction_data['trans_billid']));
-									
+	
 							// check if order exists
 							if (mysqli_num_rows($gambio_order_check) > 0) {
 								
 								// extract gambio dbdata
 								$gambio_order_data = mysqli_fetch_assoc($gambio_order_check);
-								
+
 								// set transactionstate -> Order assigned
 								$db_transaction_data['transaction_state'] = 'TRX_TRANSACTIONTATE_2';
 								
@@ -376,7 +380,10 @@
 		
 		// check if the currency matches
 		if ($gambio_order_data['currencytitle'] == $transaction_entry['tokenName']){						
-																	
+			
+			// update final price
+			$gambio_order_data['final_price'] = mysqli_fetch_assoc(mysqli_query($dbconn, "SELECT value AS value FROM orders_total WHERE orders_id='".$gambio_order_data['orders_id']."' AND class='ot_total'"))['value'];
+
 			// order complete
 			if ($gambio_order_data['final_price'] <= $transaction_entry['amount']+calc_summary_amounts ($dbconn,$shop_wallet_address,$gambio_order_data['orders_id'],$gambio_order_data['currencytitle'])['sum']){
 				$gambio_update_orderstate = "UPDATE orders SET orders_status = 161 WHERE ((orders_status='1' OR orders_status='162' OR orders_status='149')  AND (orders_id='".$gambio_order_data['orders_id']."'))";
@@ -573,8 +580,9 @@
 					value = document.getElementById("trx-orderform").value;	
 				}				
 								
-				xmlhttp.open("GET","tron-extension/php/inc/modal_order_action.php?data=" + value + "&action=" + action + "&hash=" + hash ,true);
-				xmlhttp.send();
+				xmlhttp.open("POST","modal_order_action.php" ,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send("data=" + value + "&action=" + action + "&hash=" + hash);
 			}	
 		}				  
 	  
@@ -605,11 +613,12 @@
 						}															
 					}
 				};
-				xmlhttp.open("GET","tron-extension/php/inc/modal_order_information.php?action=" + action + "&hash=" + hash + "&language=" + language + "&orderid=" + orderid ,true);
-				xmlhttp.send();
+				xmlhttp.open("POST","modal_order_information.php" ,true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send("action=" + action + "&hash=" + hash + "&language=" + language + "&orderid=" + orderid);
 		}	
 		
-		function tbl_search(event,language) {			
+		function tbl_search(event,language) {	
 			if ((event.keyCode == 13)||(event.type == "change")){				
 			    var hash = document.getElementById("trns-hash").value;
 				var order = document.getElementById("trns-order").value;
@@ -628,8 +637,9 @@
 						    document.getElementById("transaction-data").innerHTML = this.responseText;
 						}															
 					}		
-				xmlhttp.open("GET","tron-extension/php/inc/transaction_search.php?hash=" + hash + "&language=" + language + "&order=" + order + "&sender=" + sender + "&trstatus=" + trstatus + "&ordstatus=" + ordstatus + "&purpose=" + purpose + "&currency=" + currency,true);
-				xmlhttp.send();	
+				xmlhttp.open("POST","transaction_search.php",true);
+				xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xmlhttp.send("hash=" + hash + "&language=" + language + "&order=" + order + "&sender=" + sender + "&trstatus=" + trstatus + "&ordstatus=" + ordstatus + "&purpose=" + purpose + "&currency=" + currency);	
 			}
 		}	
 		
