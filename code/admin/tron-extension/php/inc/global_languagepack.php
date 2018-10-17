@@ -51,6 +51,24 @@
 					"label" => ""
 				)
 			),
+		"BTN_REMOVE_ORDERASSIGNMENT" => array (
+			"language" => array (
+				"german" => "Bestellzuordnung aufheben",
+				"english" => "Remove Order Assignment"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
+		"BTN_ORDERASSIGNMENT" => array (
+			"language" => array (
+				"german" => "Order zuweisen",
+				"english" => "Assign Order"
+				),
+			"data" => array (
+					"label" => ""
+				)
+			),
 		"TBL_ONLY_TRANS_WITH_NOTES" => array (
 			"language" => array (
 				"german" => "Nur Transaktionen mit Verwendungszweck anzeigen",
@@ -424,6 +442,15 @@
 			"language" => array (
 				"german" => "Teilüberweisung",
 				"english" => "Partial transfer"
+				),
+			"data" => array (
+					"label" => "label-processing"
+				)
+			),
+		"TRX_TRANSACTIONTATE_6" => array (
+			"language" => array (
+				"german" => "Manuell entfernt",
+				"english" => "removed by user"
 				),
 			"data" => array (
 					"label" => "label-processing"

@@ -23,8 +23,9 @@
    --------------------------------------------------------------*/
    
 	// include external library
-	include 'inc/global_lib.php';
-	include 'inc/global_settings.php';
+	include 'tron-extension/php/inc/global_lib.php';
+	include 'tron-extension/php/inc/global_settings.php';
+	require_once('includes/application_top.php');
 		
 	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);

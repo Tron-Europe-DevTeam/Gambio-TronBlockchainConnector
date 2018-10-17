@@ -21,41 +21,44 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-   
+
     // include external library
-	include 'global_lib.php';
-	include 'global_settings.php';
+	include 'tron-extension/php/inc/global_lib.php';
+	include 'tron-extension/php/inc/global_settings.php';
+	require_once('includes/application_top.php');
    
     // extract transaction hash
-	$hash = $_GET['hash'];
+	$hash = $_POST['hash'];
 
 	// extract sender
-	$sender = $_GET['sender'];
+	$sender = $_POST['sender'];
 	
 	// extract orderid
-	$order = $_GET['order'];
+	$order = $_POST['order'];
 	
 	// extract transaction status
-	$trstatus = $_GET['trstatus'];
+	$trstatus = $_POST['trstatus'];
 	
 	// extract order status
-	$ordstatus = $_GET['ordstatus'];
+	$ordstatus = $_POST['ordstatus'];
 	
 	// extract order status
-	$purpose = $_GET['purpose'];
+	$purpose = $_POST['purpose'];
+	
+    // extract currency
+	$currency = $_POST['currency'];	
 	
     // extract language
-	$language = $_GET['language'];	
+	$language = $_POST['language'];	
 
-		//create dbconnection
+	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
 	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {		
 	
-	// generate transaction table
-	gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose);
-	
+		// generate transaction table
+		gen_transtbl_values($language,$hash,$sender,$order,$trstatus,$ordstatus,$purpose,$currency);
 	}
-
+	
 ?>

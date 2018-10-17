@@ -52,8 +52,8 @@
 		
 		// blockchain sync
 		if ((getdbparameter('autosync')==1) || ($autosync==1)){
-		blockchainsync($dbconn,$curlconn,$shop_wallet_address);
-		}
+			blockchainsync($dbconn,$curlconn,$shop_wallet_address);
+		}		
 		
 		// generate transaction table
 		blockchain_gen_transtbl($dbconn,$column,$search);

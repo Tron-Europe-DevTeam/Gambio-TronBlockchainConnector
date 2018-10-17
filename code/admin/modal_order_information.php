@@ -1,7 +1,7 @@
 <?php
 /* --------------------------------------------------------------
    Tron Europe Dev Team
-   Filename: modal_order_assignment.php 
+   Filename: modal_order_information.php 
    
    15.09.2018 - Init Version
    
@@ -23,23 +23,27 @@
    --------------------------------------------------------------*/
    
     // include external library
-	include 'global_lib.php';
-	include 'global_settings.php';
+	include 'tron-extension/php/inc/global_lib.php';
+	include 'tron-extension/php/inc/global_settings.php';
+	require_once('includes/application_top.php');
    
     // extract transaction hash
-	$hash = $_GET['hash'];
+	$hash = $_POST['hash'];
 	
 	// extract language
-	$language = $_GET['language'];
+	$language = $_POST['language'];
 	
 	// extract order
-	$orderid = $_GET['orderid'];
+	$orderid = $_POST['orderid'];
 	
 	// extract action
-	$action = $_GET['action'];
+	$action = $_POST['action'];
 	
-		//create dbconnection
+	//create dbconnection
 	$dbconn = dbconnect($dbname[0]);
+	
+	// btn remove
+	$btn_remove = '';
 	
 	// check dbconnection
 	if (dbconncheck($dbconn)) {
@@ -81,11 +85,13 @@
 							  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_TOTAL_AMOUNT','language',$language).'</td><td class="td-global">'.$orderprice.'</td></tr>
 							  <tr><td class="td-global td-title">'.fieldvalue('TBL_TITLE_STATUS','language',$language).'</td><td class="td-global"><span class="label '.fieldvalue($data['orderstatus'],'label').'">'.fieldvalue($data['orderstatus'],'language',$language).'</span></td></tr>
 						  </table>
-					  </div>';};
+					  </div>';
+					  $btn_remove = '<button type="button" onclick="ordersearch(event,\'remove\',\''.$data['orderid'].'\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">'.fieldvalue('BTN_REMOVE_ORDERASSIGNMENT','language',$language).'</button>';
+					  };  
 			echo system_gen_modal_header ('Order Assignment',false);
 			echo '<div class="trx-modal-content content-order-useraction">
 					  <table>
-						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" autocomplete="off" onkeypress="ordersearch(\'search\',this.value,\'trx-orderform\')"></td></tr>
+						  <tr><td class="td-global td-title">'.fieldvalue('GLOBAL_SEARCH','language',$language).'</td><td class="dataTableContent_gm"><input style="width:300px;" id="trx-search" autocomplete="off" onkeypress="ordersearch(event,\'search\',this.value,\'trx-orderform\',\''.$data['transactionHash'].'\')"></td></tr>
 						  <tr><td class="td-global td-title">'.fieldvalue('MANUAL_ORDERASSIGNMENT','language',$language).'</td>
 							  <td class="dataTableContent_gm">
 									<select id="trx-orderform" class="form-control"><option value="-1">No Data</option></select>
@@ -95,7 +101,10 @@
 				  </div>
 				  <div class="trx-modal-header">
 					<table>
-					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td><td><button type="button" onclick="ordersearch(\'change\',\'data\',\'trx-orderform\')" class="btn btn-primary save btn-data">Order assign</button></td></tr>
+					<tr><td class="td-global td-title"><p><img align="middle" src="./tron-extension/img/tron_icon_grey.png" width="26" height="26"></p></td>
+						<td>
+						<button type="button" onclick="ordersearch(event,\'change\',\'data\',\'trx-orderform\',\''.$data['transactionHash'].'\')" class="btn btn-primary save btn-data">'.fieldvalue('BTN_ORDERASSIGNMENT','language',$language).'</button>'.$btn_remove.'						
+					</td></tr>
 					</table>
 				  </div>';
 		}
@@ -115,6 +124,7 @@
 			$dbquery = "SELECT transactionHash,timestamp,transferFromAddress,amount,tokenName,transactionstate FROM trx_transaction WHERE orderid = '".$orderid."'";
 			$result = dbquery($dbquery);
 			
+			// Tokensummary
 			echo system_gen_modal_header ('Transactionsummary',false);
 			
 			unset($token);
@@ -127,7 +137,7 @@
 					  </table></div>';
 				$tokensummary[$data['tokenName']]['amount']=$tokensummary[$data['tokenName']]['amount']+$data['amount'];	  
 				}
-				
+			// generate tokeninformation	
 			echo system_gen_modal_header ('Summary'.$token['TRX']['amount'],false);		
 			
 			foreach ($tokensummary as $token => $value) {
